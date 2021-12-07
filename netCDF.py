@@ -9,6 +9,8 @@ import common as cn
 #https://unidata.github.io/netcdf4-python/
 sz = 181*361#1000000
 
+F_TYPE = 'f8'
+
 lat = list(np.arange(-90,91,1,dtype=np.float64)) * 361
 lon = list(np.arange(0,361,1,dtype=np.float64)) * 181
 fi = np.random.uniform(size=sz)
@@ -24,12 +26,12 @@ def writeUncompressed():
 	rootgrp = Dataset(GLOBAL_FN, "w", format="NETCDF4")
 	tempgrp = rootgrp.createGroup('OutputFile')
 	tempgrp.createDimension('lat', sz)
-	Latitudes = tempgrp.createVariable('Latitudes', 'f4', 'lat')
-	Longitudes = tempgrp.createVariable('Longitudes', 'f4', 'lat')
-	FieldIntensity = tempgrp.createVariable('FieldIntensity', 'f4', 'lat')
-	GSM_X = tempgrp.createVariable('GSM_X', 'f4', 'lat')
-	GSM_Y = tempgrp.createVariable('GSM_Y', 'f4', 'lat')
-	GSM_Z = tempgrp.createVariable('GSM_Z', 'f4', 'lat')
+	Latitudes = tempgrp.createVariable('Latitudes', F_TYPE, 'lat')
+	Longitudes = tempgrp.createVariable('Longitudes', F_TYPE, 'lat')
+	FieldIntensity = tempgrp.createVariable('FieldIntensity', F_TYPE, 'lat')
+	GSM_X = tempgrp.createVariable('GSM_X', F_TYPE, 'lat')
+	GSM_Y = tempgrp.createVariable('GSM_Y', F_TYPE, 'lat')
+	GSM_Z = tempgrp.createVariable('GSM_Z', F_TYPE, 'lat')
 	Latitudes[:] = lat
 	Longitudes[:] = lon
 	FieldIntensity[:] = fi
@@ -49,19 +51,19 @@ def writeCompressed(scaleoffset = None):
 	tempgrp = rootgrp.createGroup('OutputFile')
 	tempgrp.createDimension('lat', len(lat))
 	if scaleoffset != None:
-		Latitudes = tempgrp.createVariable('Latitudes', 'f4', 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
-		Longitudes = tempgrp.createVariable('Longitudes', 'f4', 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
-		FieldIntensity = tempgrp.createVariable('FieldIntensity', 'f4', 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
-		GSM_X = tempgrp.createVariable('GSM_X', 'f4', 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
-		GSM_Y = tempgrp.createVariable('GSM_Y', 'f4', 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
-		GSM_Z = tempgrp.createVariable('GSM_Z', 'f4', 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
+		Latitudes = tempgrp.createVariable('Latitudes', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
+		Longitudes = tempgrp.createVariable('Longitudes', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
+		FieldIntensity = tempgrp.createVariable('FieldIntensity', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
+		GSM_X = tempgrp.createVariable('GSM_X', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
+		GSM_Y = tempgrp.createVariable('GSM_Y', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
+		GSM_Z = tempgrp.createVariable('GSM_Z', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
 	else:
-		Latitudes = tempgrp.createVariable('Latitudes', 'f4', 'lat',zlib=True,complevel=9, shuffle=True)
-		Longitudes = tempgrp.createVariable('Longitudes', 'f4', 'lat',zlib=True,complevel=9, shuffle=True)
-		FieldIntensity = tempgrp.createVariable('FieldIntensity', 'f4', 'lat',zlib=True,complevel=9, shuffle=True)
-		GSM_X = tempgrp.createVariable('GSM_X', 'f4', 'lat',zlib=True,complevel=9, shuffle=True)
-		GSM_Y = tempgrp.createVariable('GSM_Y', 'f4', 'lat',zlib=True,complevel=9, shuffle=True)
-		GSM_Z = tempgrp.createVariable('GSM_Z', 'f4', 'lat',zlib=True,complevel=9, shuffle=True)
+		Latitudes = tempgrp.createVariable('Latitudes', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
+		Longitudes = tempgrp.createVariable('Longitudes', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
+		FieldIntensity = tempgrp.createVariable('FieldIntensity', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
+		GSM_X = tempgrp.createVariable('GSM_X', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
+		GSM_Y = tempgrp.createVariable('GSM_Y', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
+		GSM_Z = tempgrp.createVariable('GSM_Z', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
 	Latitudes[:] = lat
 	Longitudes[:] = lon
 	FieldIntensity[:] = fi

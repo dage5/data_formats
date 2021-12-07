@@ -9,6 +9,8 @@ import common as cn
 #https://docs.h5py.org/en/stable/high/file.html
 sz = 181*361#1000000
 
+F_TYPE = 'float64'
+
 lat = list(np.arange(-90,91,1,dtype=np.float64)) * 361
 lon = list(np.arange(0,361,1,dtype=np.float64)) * 181
 fi = np.random.uniform(size=sz)
@@ -25,12 +27,12 @@ def writeUncompressed():
 	g = f.create_group('OutputFile')
 	g.attrs['ExternalFieldModelName'] = "T05"
 	g.attrs['Date'] = "2010-11-01T01:00:00TZD"
-	dset = g.create_dataset("Latitudes", data=lat, dtype='float32')
-	dset = g.create_dataset("Longitudes", data=lon, dtype='float32')
-	dset = g.create_dataset("FieldIntensity", data=fi, dtype='float32')
-	dset = g.create_dataset("GSM_X", data=x, dtype='float32')
-	dset = g.create_dataset("GSM_Y", data=y, dtype='float32')
-	dset = g.create_dataset("GSM_Z", data=z, dtype='float32')
+	dset = g.create_dataset("Latitudes", data=lat, dtype=F_TYPE)
+	dset = g.create_dataset("Longitudes", data=lon, dtype=F_TYPE)
+	dset = g.create_dataset("FieldIntensity", data=fi, dtype=F_TYPE)
+	dset = g.create_dataset("GSM_X", data=x, dtype=F_TYPE)
+	dset = g.create_dataset("GSM_Y", data=y, dtype=F_TYPE)
+	dset = g.create_dataset("GSM_Z", data=z, dtype=F_TYPE)
 	f.close()
 	end = tm.time()
 	return end - start
@@ -43,19 +45,19 @@ def writeCompressed(scaleoffset = None):
 	g.attrs['ExternalFieldModelName'] = "T05"
 	g.attrs['Date'] = "2010-11-01T01:00:00TZD"
 	if scaleoffset != None:
-		dset = g.create_dataset("Latitudes", data=lat, dtype='float32', compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True )
-		dset = g.create_dataset("Longitudes", data=lon, dtype='float32', compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
-		dset = g.create_dataset("FieldIntensity", data=fi, dtype='float32', compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
-		dset = g.create_dataset("GSM_X", data=x, dtype='float32', compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
-		dset = g.create_dataset("GSM_Y", data=y, dtype='float32', compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
-		dset = g.create_dataset("GSM_Z", data=z, dtype='float32', compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
+		dset = g.create_dataset("Latitudes", data=lat, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True )
+		dset = g.create_dataset("Longitudes", data=lon, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
+		dset = g.create_dataset("FieldIntensity", data=fi, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
+		dset = g.create_dataset("GSM_X", data=x, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
+		dset = g.create_dataset("GSM_Y", data=y, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
+		dset = g.create_dataset("GSM_Z", data=z, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
 	else:
-		dset = g.create_dataset("Latitudes", data=lat, dtype='float32', compression="gzip", compression_opts=9, shuffle = True)
-		dset = g.create_dataset("Longitudes", data=lon, dtype='float32', compression="gzip", compression_opts=9, shuffle = True)
-		dset = g.create_dataset("FieldIntensity", data=fi, dtype='float32', compression="gzip", compression_opts=9, shuffle = True)
-		dset = g.create_dataset("GSM_X", data=x, dtype='float32', compression="gzip", compression_opts=9, shuffle = True)
-		dset = g.create_dataset("GSM_Y", data=y, dtype='float32', compression="gzip", compression_opts=9, shuffle = True)
-		dset = g.create_dataset("GSM_Z", data=z, dtype='float32', compression="gzip", compression_opts=9, shuffle = True)
+		dset = g.create_dataset("Latitudes", data=lat, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
+		dset = g.create_dataset("Longitudes", data=lon, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
+		dset = g.create_dataset("FieldIntensity", data=fi, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
+		dset = g.create_dataset("GSM_X", data=x, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
+		dset = g.create_dataset("GSM_Y", data=y, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
+		dset = g.create_dataset("GSM_Z", data=z, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
 	f.close()
 	end = tm.time()
 	return end - start
