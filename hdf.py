@@ -33,7 +33,6 @@ def writeUncompressed():
 	dset = g.create_dataset("GSM_Z", data=z, dtype='float32')
 	f.close()
 	end = tm.time()
-	#print("Uncompressed:", getS(), "Time:", end-start, "size", sz)
 	return end - start
 
 
@@ -59,7 +58,6 @@ def writeCompressed(scaleoffset = None):
 		dset = g.create_dataset("GSM_Z", data=z, dtype='float32', compression="gzip", compression_opts=9, shuffle = True)
 	f.close()
 	end = tm.time()
-	#print("Compressed: ", getS(), "Time:", end-start, "size", sz)
 	return end - start
 
 def read():
@@ -76,66 +74,7 @@ def read():
 	z = np.array(oFile.get("GSM_Z"))
 	f.close()
 	end = tm.time()
-	#print("Reading time "+compressed+":", end-start, "size", sz)
 	return end - start
-
-#############################
-"""def getS(specialCompress = None):
-	filename = "mytestfile.hdf5"
-	if specialCompress != None:
-		filename = specialCompress
-	return (os.path.getsize(filename))/1000
-def extraCompression():
-	start = tm.time()
-	p = subprocess.run(["zip", "-o", "-q", "hdf.zip","./mytestfile.hdf5", "-9"])
-	end = tm.time()
-	#print("Extra compression:", getS("hdf.zip"), "Time:", end-start, "size", sz)
-	return end - start
-
-def extraCompressedRead(compressed):
-	start = tm.time()
-	p = subprocess.run(["unzip", "-o", "-q", "hdf.zip"])
-	end = tm.time()
-	#print("Reading time "+compressed+":", end-start, "size", sz)
-	return end - start
-def formatter(seconds):
-	sec = np.floor(seconds)
-	ms = (seconds - sec) * 1000
-	return str(sec) + " s " + str(ms) + " ms"
-def test(func, param = 0):
-	time = 0
-	times = []
-	for i in range(0,10):
-		if param == 0:
-			ret = func()
-		else:
-			ret = func(param)
-		time = time + ret
-		times.append(ret)
-	minimum = min(times)
-	maximum = max(times)
-	time = time - minimum - maximum
-	i = i+1#range 0 to 10 ends with 9 but there are 10 iterations
-	print(str(param),"AVG:", formatter(time / (i-2)), time / (i-2))
-"""
-"""
-test(writeUncompressed)
-test(read,"uncompressed")
-
-test(extraCompression)
-test(extraCompressedRead,"extra compressed")
-
-test(writeCompressed)
-test(read,"compressed")
-
-test(extraCompression)
-test(extraCompressedRead,"extra compressed")
-
-test(writeCompressed, 2)
-test(read,"lossy extra compressed")
-
-test(extraCompression)
-test(extraCompressedRead,"extra compressed")"""
 
 cn.test(writeUncompressed, "uncompressed w", GLOBAL_FN)
 cn.test(lambda: read(), "uncompressed r")

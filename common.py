@@ -3,7 +3,7 @@ import numpy as np
 import time as tm
 import subprocess
 
-def getS(filename):#, specialCompress = None):
+def getS(filename):
 	if filename == None:
 		return ""
 	return (os.path.getsize(filename))/1000
@@ -12,20 +12,23 @@ def extraCompression(inputFN, zipFN):
 	start = tm.time()
 	p = subprocess.run(["zip", "-o", "-q", "nc.zip","./test.nc", "-9"])
 	end = tm.time()
-	#print("Extra compression:", getS("nc.zip"), "Time:", end-start, "size", sz)
 	return end - start
 
 def extraCompressedRead(inputFN, zipFN):
 	start = tm.time()
 	p = subprocess.run(["unzip", "-o", "-q", "nc.zip"])
 	end = tm.time()
-	#print("Reading time "+compressed+":", end-start, "size", sz)
 	return end - start
 
 def formatter(seconds):
+	out = ""
 	sec = np.floor(seconds)
 	ms = (seconds - sec) * 1000
-	return str(sec) + " s " + "{:.2f}".format(ms) + " ms"
+	if(sec > 0):
+		out = str(sec) + " s " + "{:.2f}".format(ms) + " ms"
+	else:
+		out = "{:.2f}".format(ms) + " ms"
+	return out
 
 def test(func, testName, filename = None):
 	time = 0
