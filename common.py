@@ -65,7 +65,7 @@ def loadData():
 					outData["loc_lon"] = float(lines[i].split()[8])
 				if i == 7:
 					sp = lines[i].split()
-					(year, month, day, hour, minute, second) = int(sp[1]), int(sp[2]), int(sp[3]), int(sp[5]), int(sp[7]), int(sp[9])
+					(year, month, day, hour, minute, second) = [int(i) for i in (sp[1], sp[2], sp[3], sp[5], sp[7], sp[9])]
 					datetime = dt.datetime(year, month, day, hour, minute, second)
 					outData["datetime"] = datetime
 				if i == 8:
@@ -75,7 +75,7 @@ def loadData():
 					outData["step_limit"] = int(lines[i].split()[7])
 				#print(outData)
 			elif i < bodyCutoff:
-				(rig,v,rad,eth,efi,ath,afi,time,length) = lines[i].split()
+				(rig,v,rad,eth,efi,ath,afi,time,length) = [float(i) for i in lines[i].split()]
 				outData["rig"].append(rig)
 				outData["v"].append(v)
 				outData["rad"].append(rad)
@@ -86,11 +86,11 @@ def loadData():
 				outData["time"].append(time)
 				outData["length"].append(length)
 			elif i == footerLine:
-				(lcr, ucr, ecr) = lines[i].split()
+				(lcr, ucr, ecr) = [float(i) for i in lines[i].split()]
 				outData["lcr"] = (lcr)
 				outData["ucr"] = (ucr)
 				outData["ecr"] = (ecr)
-	print(outData)
+	print(outData["rig"])
 	return outData
 if __name__ == "__main__":
 	loadData()
