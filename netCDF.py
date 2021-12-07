@@ -6,6 +6,7 @@ from hurry.filesize import size, si
 import subprocess
 import common as cn
 #https://pyhogs.github.io/intro_netcdf4.html
+#https://unidata.github.io/netcdf4-python/
 sz = 181*361#1000000
 
 lat = list(np.arange(-90,91,1,dtype=np.float64)) * 361
@@ -22,7 +23,7 @@ def writeUncompressed():
 	start = tm.time()
 	rootgrp = Dataset(GLOBAL_FN, "w", format="NETCDF4")
 	tempgrp = rootgrp.createGroup('OutputFile')
-	tempgrp.createDimension('lat', len(lat))
+	tempgrp.createDimension('lat', sz)
 	Latitudes = tempgrp.createVariable('Latitudes', 'f4', 'lat')
 	Longitudes = tempgrp.createVariable('Longitudes', 'f4', 'lat')
 	FieldIntensity = tempgrp.createVariable('FieldIntensity', 'f4', 'lat')
