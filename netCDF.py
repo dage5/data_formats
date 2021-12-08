@@ -21,25 +21,22 @@ z = np.random.uniform(size=sz)
 GLOBAL_FN = "test.nc"
 GLOBAL_ZIP_NAME = "nc.zip"
 
+(gData, aData) = cn.loadData()
+sz = gData["arr_len"]
+
 def writeUncompressed():
 	start = tm.time()
 	rootgrp = Dataset(GLOBAL_FN, "w", format="NETCDF4")
 	tempgrp = rootgrp.createGroup('OutputFile')
 	tempgrp.createDimension('lat', sz)
-	Latitudes = tempgrp.createVariable('Latitudes', F_TYPE, 'lat')
-	Longitudes = tempgrp.createVariable('Longitudes', F_TYPE, 'lat')
-	FieldIntensity = tempgrp.createVariable('FieldIntensity', F_TYPE, 'lat')
-	GSM_X = tempgrp.createVariable('GSM_X', F_TYPE, 'lat')
-	GSM_Y = tempgrp.createVariable('GSM_Y', F_TYPE, 'lat')
-	GSM_Z = tempgrp.createVariable('GSM_Z', F_TYPE, 'lat')
-	Latitudes[:] = lat
-	Longitudes[:] = lon
-	FieldIntensity[:] = fi
-	GSM_X[:] = x
-	GSM_Y[:] = y
-	GSM_Z[:] = z
-	rootgrp.date = "2010-11-01T01:00:00TZD"
-	rootgrp.externalFieldModel = "T05"
+	
+	for arrayData in aData:
+		temp = tempgrp.createVariable(arrayData, F_TYPE, 'lat')
+		temp[:] = aData[arrayData]
+	
+	for attrData in gData:
+		setattr(rootgrp, attrData, gData[attrData])
+	
 	rootgrp.close()
 	end = tm.time()
 	return end - start
@@ -49,29 +46,20 @@ def writeCompressed(scaleoffset = None):
 	start = tm.time()
 	rootgrp = Dataset(GLOBAL_FN, "w", format="NETCDF4")
 	tempgrp = rootgrp.createGroup('OutputFile')
-	tempgrp.createDimension('lat', len(lat))
+	tempgrp.createDimension('lat', sz)
 	if scaleoffset != None:
-		Latitudes = tempgrp.createVariable('Latitudes', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
-		Longitudes = tempgrp.createVariable('Longitudes', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
-		FieldIntensity = tempgrp.createVariable('FieldIntensity', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
-		GSM_X = tempgrp.createVariable('GSM_X', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
-		GSM_Y = tempgrp.createVariable('GSM_Y', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
-		GSM_Z = tempgrp.createVariable('GSM_Z', F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
+		for arrayData in aData:
+			#todo pohrat sa z hodnotou least_significant_digit pre rozne udaje - ovplyvnuje presnost dost vyrazne
+			temp = tempgrp.createVariable(arrayData, F_TYPE, 'lat',zlib=True,complevel=9,least_significant_digit=2, shuffle=True)
+			temp[:] = aData[arrayData]
 	else:
-		Latitudes = tempgrp.createVariable('Latitudes', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
-		Longitudes = tempgrp.createVariable('Longitudes', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
-		FieldIntensity = tempgrp.createVariable('FieldIntensity', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
-		GSM_X = tempgrp.createVariable('GSM_X', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
-		GSM_Y = tempgrp.createVariable('GSM_Y', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
-		GSM_Z = tempgrp.createVariable('GSM_Z', F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
-	Latitudes[:] = lat
-	Longitudes[:] = lon
-	FieldIntensity[:] = fi
-	GSM_X[:] = x
-	GSM_Y[:] = y
-	GSM_Z[:] = z
-	rootgrp.date = "2010-11-01T01:00:00TZD"
-	rootgrp.externalFieldModel = "T05"
+		for arrayData in aData:
+			temp = tempgrp.createVariable(arrayData, F_TYPE, 'lat',zlib=True,complevel=9, shuffle=True)
+			temp[:] = aData[arrayData]
+	
+	for attrData in gData:
+		setattr(rootgrp, attrData, gData[attrData])
+	
 	rootgrp.close()
 	end = tm.time()
 	return end - start
@@ -80,16 +68,19 @@ def read():
 	start = tm.time()
 	rootgrp = Dataset(GLOBAL_FN, "r")
 	tempgrp = rootgrp.groups['OutputFile']
-	lat = tempgrp.variables['Latitudes'][:]
-	lon = tempgrp.variables['Longitudes'][:]
-	fi = tempgrp.variables['FieldIntensity'][:]
-	x = tempgrp.variables['GSM_X'][:]
-	y = tempgrp.variables['GSM_Y'][:]
-	z = tempgrp.variables['GSM_Z'][:]
-	date = rootgrp.date
-	fieldModel = rootgrp.externalFieldModel
+	
+	arrData = {"rig":[],"v":[],"rad":[],"eth":[],"efi":[],"ath":[],"afi":[],"time":[],"length":[]}
+	globData = {"arr_len": 0, "lcr": 0, "ucr": 0, "ecr": 0, "extern_field": None, "geo_lat": None,"geo_lon": None, "geo_rad": None, "loc_lat": None, "loc_lon": None, "datetime": None, "starting_rig": None, "rig_step": None, "step_limit": None}
+	
+	for arrayData in arrData:
+		arrData[arrayData] = tempgrp.variables[arrayData][:]
+	
+	for attrData in globData:
+		globData[attrData] = getattr(rootgrp, attrData)
+	
 	rootgrp.close()
 	end = tm.time()
+	#print(arrData["rig"])
 	return end - start
 
 

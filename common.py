@@ -70,7 +70,7 @@ def loadData():
 					sp = lines[i].split()
 					(year, month, day, hour, minute, second) = [int(i) for i in (sp[1], sp[2], sp[3], sp[5], sp[7], sp[9])]
 					datetime = dt.datetime(year, month, day, hour, minute, second)
-					globalData["datetime"] = datetime
+					globalData["datetime"] = datetime.isoformat()
 				if i == 8:
 					globalData["starting_rig"] = float(lines[i].split()[3])
 					globalData["rig_step"] = float(lines[i].split()[6])

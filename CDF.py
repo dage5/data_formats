@@ -20,7 +20,6 @@ GLOBAL_ZIP_NAME = "cdf.zip"
 
 (gData, aData) = cn.loadData()
 sz = gData["arr_len"]
-#{"arr_len": 0", rig":[],"v":[],"rad":[],"eth":[],"efi":[],"ath":[],"afi":[],"time":[],"length":[], "lcr": 0, "ucr": 0, "ecr": 0, "extern_field": None, "geo_lat": None,"geo_lon": None, "geo_rad": None, "loc_lat": None, "loc_lon": None, "datetime": None, "starting_rig": None, "rig_step": None, "step_limit": None}
 
 settings = dict()
 def writeUncompressed():
@@ -30,7 +29,7 @@ def writeUncompressed():
 	#####
 	globalAttrs={}
 	globalAttrs['extern_field']={0: gData["extern_field"]}
-	globalAttrs['datetime']={0: gData["datetime"].isoformat()}
+	globalAttrs['datetime']={0: gData["datetime"]}
 	globalAttrs['arr_len']={0: gData["arr_len"]}
 	globalAttrs['lcr']={0: gData["lcr"]}
 	globalAttrs['ucr']={0: gData["ucr"]}
@@ -81,7 +80,7 @@ def writeCompressed():
 	#####
 	globalAttrs={}
 	globalAttrs['extern_field']={0: gData["extern_field"]}
-	globalAttrs['datetime']={0: gData["datetime"].isoformat()}
+	globalAttrs['datetime']={0: gData["datetime"]}
 	globalAttrs['arr_len']={0: gData["arr_len"]}
 	globalAttrs['lcr']={0: gData["lcr"]}
 	globalAttrs['ucr']={0: gData["ucr"]}
