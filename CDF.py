@@ -6,14 +6,6 @@ from hurry.filesize import size, si
 import subprocess
 import common as cn
 #https://github.com/MAVENSDC/cdflib
-"""sz = 181*361#1000000
-
-lat = list(np.arange(-90,91,1,dtype=np.float64)) * 361
-lon = list(np.arange(0,361,1,dtype=np.float64)) * 181
-fi = np.random.uniform(size=sz)
-x = np.random.uniform(size=sz)
-y = np.random.uniform(size=sz)
-z = np.random.uniform(size=sz)"""
 
 GLOBAL_FN = "test.cdf"
 GLOBAL_ZIP_NAME = "cdf.zip"

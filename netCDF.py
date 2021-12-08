@@ -7,16 +7,8 @@ import subprocess
 import common as cn
 #https://pyhogs.github.io/intro_netcdf4.html
 #https://unidata.github.io/netcdf4-python/
-sz = 181*361#1000000
 
 F_TYPE = 'f8'
-
-lat = list(np.arange(-90,91,1,dtype=np.float64)) * 361
-lon = list(np.arange(0,361,1,dtype=np.float64)) * 181
-fi = np.random.uniform(size=sz)
-x = np.random.uniform(size=sz)
-y = np.random.uniform(size=sz)
-z = np.random.uniform(size=sz)
 
 GLOBAL_FN = "test.nc"
 GLOBAL_ZIP_NAME = "nc.zip"

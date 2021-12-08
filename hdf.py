@@ -7,32 +7,27 @@ import subprocess
 import common as cn
 #https://www.christopherlovell.co.uk/blog/2016/04/27/h5py-intro.html
 #https://docs.h5py.org/en/stable/high/file.html
-sz = 181*361#1000000
 
 F_TYPE = 'float64'
 
-lat = list(np.arange(-90,91,1,dtype=np.float64)) * 361
-lon = list(np.arange(0,361,1,dtype=np.float64)) * 181
-fi = np.random.uniform(size=sz)
-x = np.random.uniform(size=sz)
-y = np.random.uniform(size=sz)
-z = np.random.uniform(size=sz)
-
 GLOBAL_FN = "mytestfile.hdf5"
 GLOBAL_ZIP_NAME = "hdf.zip"
+
+(gData, aData) = cn.loadData()
+sz = gData["arr_len"]
 
 def writeUncompressed():
 	start = tm.time()
 	f = h5py.File(GLOBAL_FN, "w")
 	g = f.create_group('OutputFile')
-	g.attrs['ExternalFieldModelName'] = "T05"
-	g.attrs['Date'] = "2010-11-01T01:00:00TZD"
-	dset = g.create_dataset("Latitudes", data=lat, dtype=F_TYPE)
-	dset = g.create_dataset("Longitudes", data=lon, dtype=F_TYPE)
-	dset = g.create_dataset("FieldIntensity", data=fi, dtype=F_TYPE)
-	dset = g.create_dataset("GSM_X", data=x, dtype=F_TYPE)
-	dset = g.create_dataset("GSM_Y", data=y, dtype=F_TYPE)
-	dset = g.create_dataset("GSM_Z", data=z, dtype=F_TYPE)
+	
+	for arrayData in aData:
+		g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE)
+
+	
+	for attrData in gData:
+		g.attrs[attrData] = gData[attrData]
+	
 	f.close()
 	end = tm.time()
 	return end - start
@@ -42,22 +37,16 @@ def writeCompressed(scaleoffset = None):
 	start = tm.time()
 	f = h5py.File(GLOBAL_FN, "w")
 	g = f.create_group('OutputFile')
-	g.attrs['ExternalFieldModelName'] = "T05"
-	g.attrs['Date'] = "2010-11-01T01:00:00TZD"
 	if scaleoffset != None:
-		dset = g.create_dataset("Latitudes", data=lat, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True )
-		dset = g.create_dataset("Longitudes", data=lon, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
-		dset = g.create_dataset("FieldIntensity", data=fi, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
-		dset = g.create_dataset("GSM_X", data=x, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
-		dset = g.create_dataset("GSM_Y", data=y, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
-		dset = g.create_dataset("GSM_Z", data=z, dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
+		for arrayData in aData:
+			g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
 	else:
-		dset = g.create_dataset("Latitudes", data=lat, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
-		dset = g.create_dataset("Longitudes", data=lon, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
-		dset = g.create_dataset("FieldIntensity", data=fi, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
-		dset = g.create_dataset("GSM_X", data=x, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
-		dset = g.create_dataset("GSM_Y", data=y, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
-		dset = g.create_dataset("GSM_Z", data=z, dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
+		for arrayData in aData:
+			g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
+	
+	for attrData in gData:
+		g.attrs[attrData] = gData[attrData]
+
 	f.close()
 	end = tm.time()
 	return end - start
@@ -66,14 +55,16 @@ def read():
 	start = tm.time()
 	f = h5py.File(GLOBAL_FN, "r")
 	oFile = f.get('OutputFile')
-	fieldModel = oFile.attrs['ExternalFieldModelName']
-	date = oFile.attrs['Date']
-	lat = np.array(oFile.get("Latitudes"))
-	lon = np.array(oFile.get("Longitudes"))
-	fi = np.array(oFile.get("FieldIntensity"))
-	x = np.array(oFile.get("GSM_X"))
-	y = np.array(oFile.get("GSM_Y"))
-	z = np.array(oFile.get("GSM_Z"))
+	
+	arrData = {"rig":[],"v":[],"rad":[],"eth":[],"efi":[],"ath":[],"afi":[],"time":[],"length":[]}
+	globData = {"arr_len": 0, "lcr": 0, "ucr": 0, "ecr": 0, "extern_field": None, "geo_lat": None,"geo_lon": None, "geo_rad": None, "loc_lat": None, "loc_lon": None, "datetime": None, "starting_rig": None, "rig_step": None, "step_limit": None}
+	
+	for arrayData in arrData:
+		arrData[arrayData] = oFile.get(arrayData)[:]
+	
+	for attrData in globData:
+		globData[attrData] = oFile.attrs[attrData]
+	
 	f.close()
 	end = tm.time()
 	return end - start
