@@ -51,7 +51,7 @@ def loadData():
 	with open("outfil_0", "r") as f:
 		lines = f.readlines()
 		numberOfLines = len(lines)
-		globalData["arr_len"] = numberOfLines - (12 + 3)
+		globalData["arr_len"] = int(numberOfLines - (12 + 3))
 		bodyCutoff = (numberOfLines - 3)
 		footerLine = (numberOfLines - 2)
 		for i in range(0, numberOfLines):
