@@ -64,7 +64,6 @@ def writeAscii(gData, aData, fName):
 			f.write(st)
 		f.write("  CUTOFF s rigidities P(S),P(C),P(M) are:\n")
 		f.write("     "+"{:.5f}".format(gData["lcr"])+"     "+"{:.5f}".format(gData["ucr"])+"     "+"{:.5f}".format(gData["ecr"])+"\n\n")
-		
 	
 def loadData(fName = "outfil_0"):
 	arrayData = {"rig":[],"v":[],"rad":[],"eth":[],"efi":[],"ath":[],"afi":[],"time":[],"length":[]}
