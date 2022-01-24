@@ -44,11 +44,32 @@ def test(func, testName, filename = None):
 	time = time - minimum - maximum
 	i = i+1#range 0 to 10 ends with 9 but there are 10 iterations
 	print("Test:",testName,"has AVGtime:", formatter(time / (i-2)), "size:", getS(filename), "k bytes")
+
+def writeAscii(gData, aData, fName):
+	with open(fName, "w") as f:
+		header = """\n\n
+                ASYMPTOTIC COORDINATES
+   calculated by model of exter.field {extern_field}   
+ Station with geo.latitude:   {geo_lat:.3f}  & longitude:   {geo_lon:.3f} & radius :  {geo_rad:.5f}
+ Direction of trajectory with latitude:    {loc_lat:.3f} & longitude:    {loc_lon:.3f}
+ Datum: 1201  1 31  time:  0 hod  0 min  0 sec
+ Starting rigidity :   {starting_rig:.4f} GV Epsilon= {rig_step:.4f}
+ Limit of total number of steps : {step_limit} 
+
+ rig : v : rad : eth : efi : ath : afi : time : length\n""".format(
+		extern_field = gData["extern_field"], geo_lat = gData["geo_lat"], geo_lon = gData["geo_lon"], geo_rad = gData["geo_rad"], loc_lat = gData["loc_lat"], loc_lon = gData["loc_lon"], starting_rig = gData["starting_rig"], rig_step = gData["rig_step"], step_limit = gData["step_limit"])
+		f.write(header)
+		for i in range(0, len(aData["rig"])):
+			st = ""+"{:10.6f}".format(aData["rig"][i])+"   "+"{:.10f}".format(aData["v"][i])+"   "+"{:.6f}".format(aData["rad"][i])+"   "+"{:7.3f}".format(aData["eth"][i])+"   "+"{:7.3f}".format(aData["efi"][i])+"   "+"{:7.3f}".format(aData["ath"][i])+"   "+"{:7.3f}".format(aData["afi"][i])+"    "+"{:.6f}".format(aData["time"][i])+"       "+"{:9.2f}".format(aData["length"][i])+"\n"
+			f.write(st)
+		f.write("  CUTOFF s rigidities P(S),P(C),P(M) are:\n")
+		f.write("     "+"{:.5f}".format(gData["lcr"])+"     "+"{:.5f}".format(gData["ucr"])+"     "+"{:.5f}".format(gData["ecr"])+"\n\n")
+		
 	
-def loadData():
+def loadData(fName = "outfil_0"):
 	arrayData = {"rig":[],"v":[],"rad":[],"eth":[],"efi":[],"ath":[],"afi":[],"time":[],"length":[]}
 	globalData = {"arr_len": 0, "lcr": 0, "ucr": 0, "ecr": 0, "extern_field": None, "geo_lat": None,"geo_lon": None, "geo_rad": None, "loc_lat": None, "loc_lon": None, "datetime": None, "starting_rig": None, "rig_step": None, "step_limit": None}
-	with open("outfil_0", "r") as f:
+	with open(fName, "r") as f:
 		lines = f.readlines()
 		numberOfLines = len(lines)
 		globalData["arr_len"] = int(numberOfLines - (12 + 3))
@@ -96,7 +117,8 @@ def loadData():
 	#print(outData["rig"])
 	return (globalData, arrayData)
 if __name__ == "__main__":
-	loadData()
+	gData, aData = loadData()
+	#writeAscii(gData, aData)
 	
 
 
