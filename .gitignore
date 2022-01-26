@@ -3,6 +3,7 @@
 *.nc
 *.cdf
 *.hdf5
+inFiles/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

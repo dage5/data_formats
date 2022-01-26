@@ -16,55 +16,43 @@ GLOBAL_ZIP_NAME = "hdf.zip"
 (gData, aData) = cn.loadData()
 sz = gData["arr_len"]
 
-def writeUncompressed():
+def write(compression = False, scaleoffset = None):
+	cn.rmAny(GLOBAL_FN)
 	start = tm.time()
 	f = h5py.File(GLOBAL_FN, "w")
 	g = f.create_group('OutputFile')
-	
-	for arrayData in aData:
-		g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE)
-
-	
-	for attrData in gData:
-		g.attrs[attrData] = gData[attrData]
-	
-	f.close()
-	end = tm.time()
-	return end - start
-
-
-def writeCompressed(scaleoffset = None):
-	start = tm.time()
-	f = h5py.File(GLOBAL_FN, "w")
-	g = f.create_group('OutputFile')
-	if scaleoffset != None:
-		for arrayData in aData:
-			g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE, compression="gzip", compression_opts=9, scaleoffset = scaleoffset, shuffle = True)
+	if compression == True:
+		if scaleoffset != None:
+			for arrayData in aData:
+				g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True, scaleoffset = scaleoffset)
+		else:
+			for arrayData in aData:
+				g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
 	else:
 		for arrayData in aData:
-			g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
-	
+			g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE)
 	for attrData in gData:
 		g.attrs[attrData] = gData[attrData]
-
 	f.close()
 	end = tm.time()
 	return end - start
+
+def writeUncompressed():
+	return write()
+
+def writeCompressed(scaleoffset = None):
+	return write(True, scaleoffset)
 
 def read():
 	start = tm.time()
 	f = h5py.File(GLOBAL_FN, "r")
 	oFile = f.get('OutputFile')
-	
 	arrData = {"rig":[],"v":[],"rad":[],"eth":[],"efi":[],"ath":[],"afi":[],"time":[],"length":[]}
 	globData = {"arr_len": 0, "lcr": 0, "ucr": 0, "ecr": 0, "extern_field": None, "geo_lat": None,"geo_lon": None, "geo_rad": None, "loc_lat": None, "loc_lon": None, "datetime": None, "starting_rig": None, "rig_step": None, "step_limit": None}
-	
 	for arrayData in arrData:
 		arrData[arrayData] = oFile.get(arrayData)[:]
-	
 	for attrData in globData:
 		globData[attrData] = oFile.attrs[attrData]
-	
 	f.close()
 	end = tm.time()
 	return end - start
@@ -89,9 +77,6 @@ cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy comp
 cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed r")
 
 
-#print(lat)
-#print(lon)
-#print(fi)
-#print(x)
-#print(y)
-#print(z)
+
+
+

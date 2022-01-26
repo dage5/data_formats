@@ -1,13 +1,34 @@
-import os
+import os, random, shutil, sys
 import numpy as np
 import time as tm
 import subprocess
 import datetime as dt
 import ctypes
 
+def rmAny(path):
+	if os.path.exists(path):
+		if os.path.isdir(path):
+			shutil.rmtree(path)
+		else:
+			os.remove(path)
+	else:
+		sys.exit("Exiting! File " + path + " does not exist!")
+
+def get_size(start_path = '.'):
+	total_size = 0
+	for dirpath, dirnames, filenames in os.walk(start_path):
+		for f in filenames:
+			fp = os.path.join(dirpath, f)
+			# skip if it is symbolic link
+			if not os.path.islink(fp):
+				total_size += os.path.getsize(fp)
+	return total_size
+
 def getS(filename):
 	if filename == None:
 		return ""
+	if(os.path.isdir(filename)):
+		return float(get_size(filename)/1000)
 	return (os.path.getsize(filename))/1000
 
 def extraCompression(inputFN, zipFN):
@@ -36,6 +57,11 @@ def test(func, testName, filename = None):
 	time = 0
 	times = []
 	for i in range(0,10):
+		#maybe clean OS cache
+		#pomerat pri hdf aj ten druhy kompresny filter
+		#pridat aj vela malych suborov
+		#statistika nie 10 ale 1000+ merani, brat median
+		#neskor urobit aj ramdisk meranie (mozno docker)
 		ret = func()
 		time = time + ret
 		times.append(ret)
@@ -56,8 +82,7 @@ def writeAscii(gData, aData, fName):
  Starting rigidity :   {starting_rig:.4f} GV Epsilon= {rig_step:.4f}
  Limit of total number of steps : {step_limit} 
 
- rig : v : rad : eth : efi : ath : afi : time : length\n""".format(
-		extern_field = gData["extern_field"], geo_lat = gData["geo_lat"], geo_lon = gData["geo_lon"], geo_rad = gData["geo_rad"], loc_lat = gData["loc_lat"], loc_lon = gData["loc_lon"], starting_rig = gData["starting_rig"], rig_step = gData["rig_step"], step_limit = gData["step_limit"])
+ rig : v : rad : eth : efi : ath : afi : time : length\n""".format(extern_field = gData["extern_field"], geo_lat = gData["geo_lat"], geo_lon = gData["geo_lon"], geo_rad = gData["geo_rad"], loc_lat = gData["loc_lat"], loc_lon = gData["loc_lon"], starting_rig = gData["starting_rig"], rig_step = gData["rig_step"], step_limit = gData["step_limit"])
 		f.write(header)
 		for i in range(0, len(aData["rig"])):
 			st = ""+"{:10.6f}".format(aData["rig"][i])+"   "+"{:.10f}".format(aData["v"][i])+"   "+"{:.6f}".format(aData["rad"][i])+"   "+"{:7.3f}".format(aData["eth"][i])+"   "+"{:7.3f}".format(aData["efi"][i])+"   "+"{:7.3f}".format(aData["ath"][i])+"   "+"{:7.3f}".format(aData["afi"][i])+"    "+"{:.6f}".format(aData["time"][i])+"       "+"{:9.2f}".format(aData["length"][i])+"\n"
@@ -115,9 +140,29 @@ def loadData(fName = "outfil_0"):
 				globalData["ecr"] = (ecr)
 	#print(outData["rig"])
 	return (globalData, arrayData)
+
+def generateSFvalues(size):
+	random.seed(9)
+	intensity = []
+	rigidityL = []
+	rigidityU = []
+	rigidityE = []
+	intensity = []
+	for i in range(0, size):
+		randI = float(random.randint(-100,15)) * 0.1215
+		rigidityL.append(float(i) * randI)
+		rigidityU.append(float(i) + randI)
+		rigidityE.append(float(i) - randI)
+		intensity.append(float(i)*randI + randI)
+	return (intensity, rigidityL, rigidityU, rigidityE)
+
 if __name__ == "__main__":
-	gData, aData = loadData()
+	#gData, aData = loadData()
 	#writeAscii(gData, aData)
+	(intensity, rigidityL, rigidityU, rigidityE) = generateSFvalues(100)
+#	writeSmallFiles(intensity, rigidityL, rigidityU, rigidityE)
+#	generateSmallFiles(100)
+#	readSmallFiles(100)
 	
 
 
