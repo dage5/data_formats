@@ -1,12 +1,13 @@
 from netCDF4 import Dataset
 import numpy as np
-import os
+import os, sys
 import time as tm
 from hurry.filesize import size, si
 import subprocess
 import common as cn
 #https://pyhogs.github.io/intro_netcdf4.html
 #https://unidata.github.io/netcdf4-python/
+iters = int(sys.argv[1])
 
 F_TYPE = 'f8'
 
@@ -95,38 +96,38 @@ def read():
 	return end - start
 
 
-cn.test(lambda: write(), "uncompressed w", GLOBAL_FN)
-cn.test(lambda: read(), "uncompressed r")
+cn.test(lambda: write(), "uncompressed w", iters, GLOBAL_FN)
+cn.test(lambda: read(), "uncompressed r", iters)
 
-cn.test(lambda: write(False, 2), "lossy uncompressed w", GLOBAL_FN)
-cn.test(lambda: read(), "lossy uncompressed r")
-
-#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
-#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
-
-cn.test(lambda: write(True, None), "compressed w", GLOBAL_FN)
-cn.test(lambda: read(), "compressed r")
+cn.test(lambda: write(False, 2), "lossy uncompressed w", iters, GLOBAL_FN)
+cn.test(lambda: read(), "lossy uncompressed r", iters)
 
 #cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
 #cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
 
-cn.test(lambda: write(True, 2), "lossy compressed w", GLOBAL_FN)
-cn.test(lambda: read(), "lossy compressed r")
+cn.test(lambda: write(True, None), "compressed w", iters, GLOBAL_FN)
+cn.test(lambda: read(), "compressed r", iters)
+
+#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
+#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
+
+cn.test(lambda: write(True, 2), "lossy compressed w", iters, GLOBAL_FN)
+cn.test(lambda: read(), "lossy compressed r", iters)
 
 #cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed w", GLOBAL_ZIP_NAME)
 #cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed r")
 
-cn.test(lambda: writeSmall(), "uncompressed sf w", GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "uncompressed sf r")
+cn.test(lambda: writeSmall(), "uncompressed sf w", iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "uncompressed sf r", iters)
 
-cn.test(lambda: writeSmall(False, 2), "lossy uncompressed sf w", GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "uncompressed sf r")
+cn.test(lambda: writeSmall(False, 2), "lossy uncompressed sf w", iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "uncompressed sf r", iters)
 
-cn.test(lambda: writeSmall(True, None), "compressed sf w", GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "compressed sf r")
+cn.test(lambda: writeSmall(True, None), "compressed sf w", iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "compressed sf r", iters)
 
-cn.test(lambda: writeSmall(True, 2), "lossy compressed sf w", GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "lossy compressed sf r")
+cn.test(lambda: writeSmall(True, 2), "lossy compressed sf w", iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "lossy compressed sf r", iters)
 
 
 

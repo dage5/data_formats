@@ -56,11 +56,10 @@ def formatter(seconds):
 		out = "{:.2f}".format(ms) + " ms"
 	return out
 
-def test(func, testName, filename = None):
+def test(func, testName, iters = 10, filename = None):
 	time = 0
 	times = []
-	for i in range(0,10):
-		#statistika nie 10 ale 1000+ merani, brat median
+	for i in range(0, iters):
 		#neskor urobit aj ramdisk meranie (mozno docker)
 		#pridat vela malych suborov pre binarne formaty ale zle vyriesenych - kazdy subor bude mat samostatny skalar
 		os.system('sudo sh -c "sync; echo 1 > /proc/sys/vm/drop_caches"')
@@ -69,11 +68,12 @@ def test(func, testName, filename = None):
 		ret = func()
 		time = time + ret
 		times.append(ret)
+	ts = np.array(times)
 	minimum = min(times)
 	maximum = max(times)
 	time = time - minimum - maximum
 	i = i+1#range 0 to 10 ends with 9 but there are 10 iterations
-	print("Test:",testName,"has AVGtime:", formatter(time / (i-2)), "size:", getS(filename), "k bytes")
+	print("Test:",testName,"took AVG:", formatter(time / (i-2)), "took median:", formatter(np.median(ts)), "size:", getS(filename), "k bytes")
 
 def writeAscii(gData, aData, fName):
 	with open(fName, "w") as f:

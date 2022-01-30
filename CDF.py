@@ -1,11 +1,12 @@
 import cdflib
 import numpy as np
-import os
+import os, sys
 import time as tm
 from hurry.filesize import size, si
 import subprocess
 import common as cn
 #https://github.com/MAVENSDC/cdflib
+iters = int(sys.argv[1])
 
 GLOBAL_FN = "test.cdf"
 GLOBAL_ZIP_NAME = "cdf.zip"
@@ -94,23 +95,23 @@ def read():
 	end = tm.time()
 	return end - start
 
-cn.test(lambda: write(0), "uncompressed w", GLOBAL_FN)
-cn.test(lambda: read(), "uncompressed r")
+cn.test(lambda: write(0), "uncompressed w", iters, GLOBAL_FN)
+cn.test(lambda: read(), "uncompressed r", iters)
 
-#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
-#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
+#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", iters, GLOBAL_ZIP_NAME)
+#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r", iters)
 
-cn.test(lambda: write(9), "compressed w", GLOBAL_FN)
-cn.test(lambda: read(), "compressed r")
+cn.test(lambda: write(9), "compressed w", iters, GLOBAL_FN)
+cn.test(lambda: read(), "compressed r", iters)
 
-#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
-#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
+#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", iters, GLOBAL_ZIP_NAME)
+#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r", iters)
 
-cn.test(lambda: writeSmall(0), "uncompressed sf w", GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "uncompressed sf r")
+cn.test(lambda: writeSmall(0), "uncompressed sf w", iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "uncompressed sf r", iters)
 
-cn.test(lambda: writeSmall(9), "compressed sf w", GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "compressed sf r")
+cn.test(lambda: writeSmall(9), "compressed sf w", iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "compressed sf r", iters)
 
 
 

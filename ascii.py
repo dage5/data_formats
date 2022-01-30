@@ -1,10 +1,12 @@
 import numpy as np
-import os
+import os, sys
 import time as tm
 from hurry.filesize import size, si
 import subprocess
 import common as cn
 #https://github.com/MAVENSDC/cdflib
+
+iters = int(sys.argv[1])
 
 GLOBAL_FN = "test.ascii"
 GLOBAL_ZIP_NAME = "ascii.zip"
@@ -57,14 +59,14 @@ def readSmallFiles(size, dirName = "./inFiles/"):
 	end = tm.time()
 	return end - start
 
-cn.test(writeUncompressed, "uncompressed w", GLOBAL_FN)
-cn.test(lambda: read(), "uncompressed r")
+cn.test(writeUncompressed, "uncompressed w", iters, GLOBAL_FN)
+cn.test(lambda: read(), "uncompressed r", iters)
 
 #cn.test(lambda: (writeUncompressed() + cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed w", GLOBAL_ZIP_NAME)
 #cn.test(lambda: (read() + cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed r")
 
-cn.test(lambda: writeSmallFiles(globalData, arrayData), "uncompressed sf w", "./inFiles/")
-cn.test(lambda: readSmallFiles(SMALL_FILE_SIZE), "uncompressed sf r")
+cn.test(lambda: writeSmallFiles(globalData, arrayData), "uncompressed sf w", iters, "./inFiles/")
+cn.test(lambda: readSmallFiles(SMALL_FILE_SIZE), "uncompressed sf r", iters)
 
 
 
