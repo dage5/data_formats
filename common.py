@@ -148,18 +148,15 @@ def loadData(fName = "outfil_0"):
 
 def generateSFvalues(size):
 	random.seed(9)
-	intensity = []
-	rigidityL = []
-	rigidityU = []
-	rigidityE = []
-	intensity = []
+	globalData = {"len": size}
+	arrayData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
 	for i in range(0, size):
 		randI = float(random.randint(-100,15)) * 0.1215
-		rigidityL.append(float(i) * randI)
-		rigidityU.append(float(i) + randI)
-		rigidityE.append(float(i) - randI)
-		intensity.append(float(i)*randI + randI)
-	return (intensity, rigidityL, rigidityU, rigidityE)
+		arrayData["intens"].append(float(i) * randI)
+		arrayData["lcr"].append(float(i) + randI)
+		arrayData["ucr"].append(float(i) - randI)
+		arrayData["ecr"].append(float(i)*randI + randI)
+	return (globalData, arrayData)
 
 if __name__ == "__main__":
 	#gData, aData = loadData()

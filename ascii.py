@@ -12,6 +12,9 @@ GLOBAL_ZIP_NAME = "ascii.zip"
 (gData, aData) = cn.loadData()
 sz = gData["arr_len"]
 
+SMALL_FILE_SIZE = 100
+(globalData, arrayData) = cn.generateSFvalues(SMALL_FILE_SIZE)
+
 def writeUncompressed():
 	cn.rmAny(GLOBAL_FN)
 	start = tm.time()
@@ -25,35 +28,32 @@ def read():
 	end = tm.time()
 	return end - start
 
-def writeSmallFiles(intensity, rigidityL, rigidityU, rigidityE, dirName = "./inFiles/"):
+def writeSmallFiles(globalData, arrayData, dirName = "./inFiles/"):
 	cn.rmAny(dirName)
 	start = tm.time()
 	os.makedirs(dirName, exist_ok = True)
-	size = len(intensity)
+	size = globalData["len"]
 	for i in range(0, size):
 		with open(dirName + "rigidity_"+str(i)+".dat", "w") as f:
-			f.write("{:f} {:.4f} {:.3f}".format(rigidityL[i], rigidityU[i], rigidityE[i]))
+			f.write("{:f} {:.4f} {:.3f}".format(arrayData["lcr"][i], arrayData["ucr"][i], arrayData["ecr"][i]))
 		with open(dirName + "intensity_"+str(i)+".dat", "w") as f:
-			f.write("{:.5f}".format(intensity[i]))
+			f.write("{:.5f}".format(arrayData["intens"][i]))
 	end = tm.time()
 	return end - start
 
 def readSmallFiles(size, dirName = "./inFiles/"):
 	start = tm.time()
-	intensity = []
-	rigidityL = []
-	rigidityU = []
-	rigidityE = []
-	
+	globalData = {"len": size}
+	arrayData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
 	for i in range(0, size):
 		with open(dirName + "rigidity_"+str(i)+".dat", "r") as f:
 			content = f.read()
 			rl, ru, re = content.split()
-			rigidityL.append(float(rl))
-			rigidityU.append(float(ru))
-			rigidityE.append(float(re))
+			arrayData["lcr"].append(float(rl))
+			arrayData["ucr"].append(float(ru))
+			arrayData["ecr"].append(float(re))
 		with open(dirName + "intensity_"+str(i)+".dat", "r") as f:
-			intensity.append(float(f.read()))
+			arrayData["intens"].append(float(f.read()))
 	end = tm.time()
 	return end - start
 
@@ -63,9 +63,8 @@ cn.test(lambda: read(), "uncompressed r")
 cn.test(lambda: (writeUncompressed() + cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed w", GLOBAL_ZIP_NAME)
 cn.test(lambda: (read() + cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed r")
 
-(intensity, rigidityL, rigidityU, rigidityE) = cn.generateSFvalues(100)
-cn.test(lambda: writeSmallFiles(intensity, rigidityL, rigidityU, rigidityE), "uncompressed sf w", "./inFiles/")
-cn.test(lambda: readSmallFiles(100), "uncompressed sf r")
+cn.test(lambda: writeSmallFiles(globalData, arrayData), "uncompressed sf w", "./inFiles/")
+cn.test(lambda: readSmallFiles(SMALL_FILE_SIZE), "uncompressed sf r")
 
 
 

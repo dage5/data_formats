@@ -10,10 +10,40 @@ import common as cn
 GLOBAL_FN = "test.cdf"
 GLOBAL_ZIP_NAME = "cdf.zip"
 
+GLOBAL_FN_SMALL = "small.cdf"
+GLOBAL_ZIP_NAME_SMALL = "cdf_small.zip"
+
 (gData, aData) = cn.loadData()
 sz = gData["arr_len"]
 
+(globalData, arrayData) = cn.generateSFvalues(100)
+
 settings = dict()
+
+def writeSmall(compressionLvl):
+	cn.rmAny(GLOBAL_FN)
+	start = tm.time()
+	settings['Compressed'] = compressionLvl
+	cdf_file = cdflib.cdfwrite.CDF(GLOBAL_FN, cdf_spec=settings,delete=True)
+	###
+	globalAttrs={}
+	for attrData in gData:
+		globalAttrs[attrData] = {0: gData[attrData]}
+	cdf_file.write_globalattrs(globalAttrs)
+	###
+	varinfo = {}
+	varinfo["Data_Type"] = cdflib.cdfwrite.CDF.CDF_REAL8 #'CDF_FLOAT'
+	varinfo["Num_Elements"] = 1
+	varinfo["Rec_Vary"] = 0
+	varinfo["Dim_Sizes"] = [sz]
+	varinfo["Compress"] = compressionLvl
+	for attrData in aData:
+		varinfo["Variable"] = attrData
+		cdf_file.write_var(varinfo, var_data=aData[attrData])
+	###
+	cdf_file.close()
+	end = tm.time()
+	return end - start
 
 def write(compressionLvl):
 	cn.rmAny(GLOBAL_FN)
