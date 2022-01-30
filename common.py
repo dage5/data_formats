@@ -12,7 +12,8 @@ def rmAny(path):
 		else:
 			os.remove(path)
 	else:
-		sys.exit("Exiting! File " + path + " does not exist!")
+		print("Exiting! File " + path + " does not exist!")
+#		sys.exit("Exiting! File " + path + " does not exist!")
 
 def get_size(start_path = '.'):
 	total_size = 0
@@ -32,12 +33,14 @@ def getS(filename):
 	return (os.path.getsize(filename))/1000
 
 def extraCompression(inputFN, zipFN):
+	rmAny(zipFN)
 	start = tm.time()
 	p = subprocess.run(["zip", "-o", "-q", zipFN, inputFN, "-9"])
 	end = tm.time()
 	return end - start
 
 def extraCompressedRead(inputFN, zipFN):
+	rmAny(inputFN)
 	start = tm.time()
 	p = subprocess.run(["unzip", "-o", "-q", zipFN])
 	end = tm.time()
