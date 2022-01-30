@@ -16,33 +16,46 @@ GLOBAL_ZIP_NAME_SMALL = "cdf_small.zip"
 (gData, aData) = cn.loadData()
 sz = gData["arr_len"]
 
-(globalData, arrayData) = cn.generateSFvalues(100)
+SMALL_FILE_SIZE = 65160
+(globalData, arrayData) = cn.generateSFvalues(SMALL_FILE_SIZE)
 
 settings = dict()
 
 def writeSmall(compressionLvl):
-	cn.rmAny(GLOBAL_FN)
+	cn.rmAny(GLOBAL_FN_SMALL)
 	start = tm.time()
 	settings['Compressed'] = compressionLvl
-	cdf_file = cdflib.cdfwrite.CDF(GLOBAL_FN, cdf_spec=settings,delete=True)
-	###
+	cdf_file = cdflib.cdfwrite.CDF(GLOBAL_FN_SMALL, cdf_spec=settings,delete=True)
 	globalAttrs={}
-	for attrData in gData:
-		globalAttrs[attrData] = {0: gData[attrData]}
+	for attrData in globalData:
+		globalAttrs[attrData] = {0: globalData[attrData]}
 	cdf_file.write_globalattrs(globalAttrs)
-	###
 	varinfo = {}
 	varinfo["Data_Type"] = cdflib.cdfwrite.CDF.CDF_REAL8 #'CDF_FLOAT'
 	varinfo["Num_Elements"] = 1
 	varinfo["Rec_Vary"] = 0
-	varinfo["Dim_Sizes"] = [sz]
+	varinfo["Dim_Sizes"] = [SMALL_FILE_SIZE]
 	varinfo["Compress"] = compressionLvl
-	for attrData in aData:
+	for attrData in arrayData:
 		varinfo["Variable"] = attrData
-		cdf_file.write_var(varinfo, var_data=aData[attrData])
-	###
+		cdf_file.write_var(varinfo, var_data=arrayData[attrData])
 	cdf_file.close()
 	end = tm.time()
+	return end - start
+
+def readSmall():
+	start = tm.time()
+	cdf_file = cdflib.cdfread.CDF(GLOBAL_FN_SMALL)
+	attrs = cdf_file.globalattsget()
+	globData = {"len": size}
+	arrData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
+	for arrayData_ in arrData:
+		arrData[arrayData_] = cdf_file.varget(arrayData_)
+	for attrData_ in globData:
+		globData[attrData_] = attrs[attrData_]
+	cdf_file.close()
+	end = tm.time()
+	#print(globData["len"], arrData["intens"])
 	return end - start
 
 def write(compressionLvl):
@@ -67,12 +80,6 @@ def write(compressionLvl):
 	end = tm.time()
 	return end - start
 
-def writeUncompressed():
-	return write(0)
-
-def writeCompressed():
-	return write(9)
-
 def read():
 	start = tm.time()
 	cdf_file = cdflib.cdfread.CDF(GLOBAL_FN)
@@ -87,19 +94,23 @@ def read():
 	end = tm.time()
 	return end - start
 
-cn.test(writeUncompressed, "uncompressed w", GLOBAL_FN)
+cn.test(lambda: write(0), "uncompressed w", GLOBAL_FN)
 cn.test(lambda: read(), "uncompressed r")
 
-cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
-cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
+#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
+#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
 
-cn.test(writeCompressed, "compressed w", GLOBAL_FN)
+cn.test(lambda: write(9), "compressed w", GLOBAL_FN)
 cn.test(lambda: read(), "compressed r")
 
-cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
-cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
+#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
+#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
 
+cn.test(lambda: writeSmall(0), "uncompressed sf w", GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "uncompressed sf r")
 
+cn.test(lambda: writeSmall(9), "compressed sf w", GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "compressed sf r")
 
 
 

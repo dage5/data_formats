@@ -13,35 +13,64 @@ F_TYPE = 'float64'
 GLOBAL_FN = "mytestfile.hdf5"
 GLOBAL_ZIP_NAME = "hdf.zip"
 
+GLOBAL_FN_SMALL = "small.hdf5"
+GLOBAL_ZIP_NAME_SMALL = "hdf_small.zip"
+
 (gData, aData) = cn.loadData()
 sz = gData["arr_len"]
 
-def write(compression = False, scaleoffset = None):
+SMALL_FILE_SIZE = 65160
+(globalData, arrayData) = cn.generateSFvalues(SMALL_FILE_SIZE)
+
+def writeSmall(cfName = "gzip", compression = False, scaleoffset = None):
+	cn.rmAny(GLOBAL_FN_SMALL)
+	start = tm.time()
+	f = h5py.File(GLOBAL_FN_SMALL, "w")
+	g = f.create_group('OutputFile')
+	if compression == True:
+		cprsLvl = 9 if cfName == "gzip" else None
+		for data in arrayData:
+			g.create_dataset(data, data=arrayData[data], dtype=F_TYPE, compression=cfName, compression_opts=cprsLvl, shuffle = True, scaleoffset = scaleoffset)
+	else:
+		for data in arrayData:
+			g.create_dataset(data, data=arrayData[data], dtype=F_TYPE, scaleoffset = scaleoffset)
+	for attrData in globalData:
+		g.attrs[attrData] = globalData[attrData]
+	f.close()
+	end = tm.time()
+	return end - start
+
+def readSmall():
+	start = tm.time()
+	f = h5py.File(GLOBAL_FN_SMALL, "r")
+	oFile = f.get('OutputFile')
+	globData = {"len": size}
+	arrData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
+	for data in arrData:
+		arrData[data] = oFile.get(data)[:]
+	for data in globData:
+		globData[data] = oFile.attrs[data]
+	f.close()
+	end = tm.time()
+	return end - start
+
+def write(cfName = "gzip", compression = False, scaleoffset = None):
 	cn.rmAny(GLOBAL_FN)
 	start = tm.time()
 	f = h5py.File(GLOBAL_FN, "w")
 	g = f.create_group('OutputFile')
 	if compression == True:
-		if scaleoffset != None:
-			for arrayData in aData:
-				g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True, scaleoffset = scaleoffset)
-		else:
-			for arrayData in aData:
-				g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE, compression="gzip", compression_opts=9, shuffle = True)
+		cprsLvl = 9 if cfName == "gzip" else None
+		for arrayData in aData:
+			g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE, compression=cfName, compression_opts=cprsLvl, shuffle = True, scaleoffset = scaleoffset)
 	else:
 		for arrayData in aData:
-			g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE)
+			g.create_dataset(arrayData, data=aData[arrayData], dtype=F_TYPE, scaleoffset = scaleoffset)
 	for attrData in gData:
 		g.attrs[attrData] = gData[attrData]
 	f.close()
 	end = tm.time()
 	return end - start
-
-def writeUncompressed():
-	return write()
-
-def writeCompressed(scaleoffset = None):
-	return write(True, scaleoffset)
 
 def read():
 	start = tm.time()
@@ -57,24 +86,48 @@ def read():
 	end = tm.time()
 	return end - start
 
-cn.test(writeUncompressed, "uncompressed w", GLOBAL_FN)
+cn.test(lambda: write(), "uncompressed w", GLOBAL_FN)
 cn.test(lambda: read(), "uncompressed r")
 
+cn.test(lambda: write(None, False, 2), "lossy uncompressed w", GLOBAL_FN)
+cn.test(lambda: read(), "lossy uncompressed r")
 
-cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
-cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
+#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
+#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
 
-cn.test(lambda: writeCompressed(), "compressed w", GLOBAL_ZIP_NAME)
-cn.test(lambda: read(), "compressed r")
+cn.test(lambda: write("gzip", True, None), "gzip compressed w", GLOBAL_FN)
+cn.test(lambda: read(), "gzip compressed r")
 
-cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
-cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
+#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
+#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
 
-cn.test(lambda: writeCompressed(2), "lossy compressed w", GLOBAL_FN)
-cn.test(lambda: read(), "lossy compressed r")
+cn.test(lambda: write("gzip", True, 2), "gzip lossy compressed w", GLOBAL_FN)
+cn.test(lambda: read(), "gzip lossy compressed r")
 
-cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed w", GLOBAL_ZIP_NAME)
-cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed r")
+cn.test(lambda: write("lzf", True, None), "lzf compressed w", GLOBAL_FN)
+cn.test(lambda: read(), "lzf compressed r")
+
+cn.test(lambda: write("lzf", True, 2), "lzf lossy compressed w", GLOBAL_FN)
+cn.test(lambda: read(), "lzf lossy compressed r")
+
+#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed w", GLOBAL_ZIP_NAME)
+#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed r")
+
+cn.test(lambda: writeSmall(), "uncompressed sf w", GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "uncompressed sf w")
+
+cn.test(lambda: writeSmall("gzip", True, None), "gzip compressed sf w", GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "gzip compressed sf w")
+
+cn.test(lambda: writeSmall("gzip", True, 2), "gzip lossy compressed sf w", GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "gzip lossy compressed sf w")
+
+cn.test(lambda: writeSmall("lzf", True, None), "lzf compressed sf w", GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "lzf compressed sf w")
+
+cn.test(lambda: writeSmall("lzf", True, 2), "lzf lossy compressed sf w", GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "lzf lossy compressed sf w")
+
 
 
 

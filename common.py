@@ -60,10 +60,9 @@ def test(func, testName, filename = None):
 	time = 0
 	times = []
 	for i in range(0,10):
-		#pridat aj vela malych suborov
-		#pomerat pri hdf aj ten druhy kompresny filter
 		#statistika nie 10 ale 1000+ merani, brat median
 		#neskor urobit aj ramdisk meranie (mozno docker)
+		#pridat vela malych suborov pre binarne formaty ale zle vyriesenych - kazdy subor bude mat samostatny skalar
 		os.system('sudo sh -c "sync; echo 1 > /proc/sys/vm/drop_caches"')
 		os.system('sudo sh -c "sync; echo 2 > /proc/sys/vm/drop_caches"')
 		os.system('sudo sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"')

@@ -12,7 +12,7 @@ GLOBAL_ZIP_NAME = "ascii.zip"
 (gData, aData) = cn.loadData()
 sz = gData["arr_len"]
 
-SMALL_FILE_SIZE = 100
+SMALL_FILE_SIZE = 65160
 (globalData, arrayData) = cn.generateSFvalues(SMALL_FILE_SIZE)
 
 def writeUncompressed():
@@ -60,8 +60,8 @@ def readSmallFiles(size, dirName = "./inFiles/"):
 cn.test(writeUncompressed, "uncompressed w", GLOBAL_FN)
 cn.test(lambda: read(), "uncompressed r")
 
-cn.test(lambda: (writeUncompressed() + cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed w", GLOBAL_ZIP_NAME)
-cn.test(lambda: (read() + cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed r")
+#cn.test(lambda: (writeUncompressed() + cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed w", GLOBAL_ZIP_NAME)
+#cn.test(lambda: (read() + cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed r")
 
 cn.test(lambda: writeSmallFiles(globalData, arrayData), "uncompressed sf w", "./inFiles/")
 cn.test(lambda: readSmallFiles(SMALL_FILE_SIZE), "uncompressed sf r")
