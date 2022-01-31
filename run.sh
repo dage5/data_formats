@@ -1,6 +1,6 @@
-iters=3
+iters=10000
 smallFiles=60000
-smallFiles=50
+#smallFiles=50
 
 sudo mkdir /mnt/tmp
 

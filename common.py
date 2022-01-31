@@ -69,11 +69,11 @@ def test(func, testName, iters = 10, filename = None):
 		time = time + ret
 		times.append(ret)
 	ts = np.array(times)
-	minimum = min(times)
-	maximum = max(times)
-	time = time - minimum - maximum
+	#minimum = min(times)
+	#maximum = max(times)
+	#time = time - minimum - maximum
 	i = i+1#range 0 to 10 ends with 9 but there are 10 iterations
-	print("Test:",testName,"took AVG:", formatter(time / (i-2)), "took median:", formatter(np.median(ts)), "size:", getS(filename), "k bytes")
+	print("Test:",testName,"took AVG:", formatter(time / i), "took median:", formatter(np.median(ts)), "size:", getS(filename), "k bytes")
 
 def writeAscii(gData, aData, fName):
 	with open(fName, "w") as f:
