@@ -1,0 +1,118 @@
+===============RAM===============
+===============ascii===============
+File test.ascii does not exist!
+Test: uncompressed w took AVG: 46.89 ms took median: 46.89 ms size: 983.769 k bytes
+Test: uncompressed r took AVG: 30.14 ms took median: 30.14 ms size:  k bytes
+File ./inFiles/ does not exist!
+Test: uncompressed sf w took AVG: 540.75 ms took median: 540.75 ms size: 426.387 k bytes
+Test: uncompressed sf r took AVG: 312.75 ms took median: 312.75 ms size:  k bytes
+===============netCDF===============
+File test.nc does not exist!
+Test: uncompressed w took AVG: 19.78 ms took median: 19.78 ms size: 681.832 k bytes
+Test: uncompressed r took AVG: 8.81 ms took median: 8.81 ms size:  k bytes
+Test: lossy uncompressed w took AVG: 19.17 ms took median: 19.17 ms size: 682.664 k bytes
+Test: lossy uncompressed r took AVG: 9.24 ms took median: 9.24 ms size:  k bytes
+Test: compressed w took AVG: 45.00 ms took median: 45.00 ms size: 336.725 k bytes
+Test: compressed r took AVG: 12.92 ms took median: 12.92 ms size:  k bytes
+Test: lossy compressed w took AVG: 47.75 ms took median: 47.75 ms size: 85.691 k bytes
+Test: lossy compressed r took AVG: 17.83 ms took median: 17.83 ms size:  k bytes
+File small.nc does not exist!
+Test: uncompressed sf w took AVG: 11.07 ms took median: 11.07 ms size: 326.68 k bytes
+Test: uncompressed sf r took AVG: 4.51 ms took median: 4.51 ms size:  k bytes
+Test: lossy uncompressed sf w took AVG: 9.84 ms took median: 9.84 ms size: 327.582 k bytes
+Test: uncompressed sf r took AVG: 4.36 ms took median: 4.36 ms size:  k bytes
+Test: compressed sf w took AVG: 37.85 ms took median: 37.85 ms size: 264.679 k bytes
+Test: compressed sf r took AVG: 9.62 ms took median: 9.62 ms size:  k bytes
+Test: lossy compressed sf w took AVG: 69.70 ms took median: 69.70 ms size: 125.59 k bytes
+Test: lossy compressed sf r took AVG: 10.21 ms took median: 10.21 ms size:  k bytes
+===============hdf===============
+File mytestfile.hdf5 does not exist!
+Test: uncompressed w took AVG: 21.13 ms took median: 21.13 ms size: 678.496 k bytes
+Test: uncompressed r took AVG: 9.70 ms took median: 9.70 ms size:  k bytes
+Test: lossy uncompressed w took AVG: 34.18 ms took median: 34.18 ms size: 129.979 k bytes
+Test: lossy uncompressed r took AVG: 10.95 ms took median: 10.95 ms size:  k bytes
+Test: gzip compressed w took AVG: 39.79 ms took median: 39.79 ms size: 333.928 k bytes
+Test: gzip compressed r took AVG: 21.79 ms took median: 21.79 ms size:  k bytes
+Test: gzip lossy compressed w took AVG: 59.51 ms took median: 59.51 ms size: 116.283 k bytes
+Test: gzip lossy compressed r took AVG: 15.73 ms took median: 15.73 ms size:  k bytes
+Test: lzf compressed w took AVG: 27.62 ms took median: 27.62 ms size: 398.153 k bytes
+Test: lzf compressed r took AVG: 8.16 ms took median: 8.16 ms size:  k bytes
+Test: lzf lossy compressed w took AVG: 53.42 ms took median: 53.42 ms size: 119.444 k bytes
+Test: lzf lossy compressed r took AVG: 12.30 ms took median: 12.30 ms size:  k bytes
+File small.hdf5 does not exist!
+Test: uncompressed sf w took AVG: 6.37 ms took median: 6.37 ms size: 324.48 k bytes
+Test: uncompressed sf w took AVG: 2.26 ms took median: 2.26 ms size:  k bytes
+Test: gzip compressed sf w took AVG: 30.71 ms took median: 30.71 ms size: 271.984 k bytes
+Test: gzip compressed sf w took AVG: 10.16 ms took median: 10.16 ms size:  k bytes
+Test: gzip lossy compressed sf w took AVG: 19.07 ms took median: 19.07 ms size: 113.2 k bytes
+Test: gzip lossy compressed sf w took AVG: 4.78 ms took median: 4.78 ms size:  k bytes
+Test: lzf compressed sf w took AVG: 17.69 ms took median: 17.69 ms size: 288.79 k bytes
+Test: lzf compressed sf w took AVG: 3.32 ms took median: 3.32 ms size:  k bytes
+Test: lzf lossy compressed sf w took AVG: 27.05 ms took median: 27.05 ms size: 112.88 k bytes
+Test: lzf lossy compressed sf w took AVG: 5.65 ms took median: 5.65 ms size:  k bytes
+===============CDF===============
+File test.cdf does not exist!
+Test: uncompressed w took AVG: 12.65 ms took median: 12.65 ms size: 678.322 k bytes
+Test: uncompressed r took AVG: 4.66 ms took median: 4.66 ms size:  k bytes
+Test: compressed w took AVG: 44.52 ms took median: 44.52 ms size: 199.501 k bytes
+Test: compressed r took AVG: 12.73 ms took median: 12.73 ms size:  k bytes
+File small.cdf does not exist!
+Test: uncompressed sf w took AVG: 2.48 ms took median: 2.48 ms size: 322.84 k bytes
+Test: uncompressed sf r took AVG: 1.84 ms took median: 1.84 ms size:  k bytes
+Test: compressed sf w took AVG: 31.48 ms took median: 31.48 ms size: 166.757 k bytes
+Test: compressed sf r took AVG: 9.37 ms took median: 9.37 ms size:  k bytes
+===============HDD===============
+===============ascii===============
+Test: uncompressed w took AVG: 78.68 ms took median: 78.68 ms size: 983.769 k bytes
+Test: uncompressed r took AVG: 36.45 ms took median: 36.45 ms size:  k bytes
+Test: uncompressed sf w took AVG: 833.65 ms took median: 833.65 ms size: 426.387 k bytes
+Test: uncompressed sf r took AVG: 6.0 s 112.52 ms took median: 6.0 s 112.52 ms size:  k bytes
+===============netCDF===============
+Test: uncompressed w took AVG: 32.48 ms took median: 32.48 ms size: 681.832 k bytes
+Test: uncompressed r took AVG: 12.23 ms took median: 12.23 ms size:  k bytes
+Test: lossy uncompressed w took AVG: 30.69 ms took median: 30.69 ms size: 682.664 k bytes
+Test: lossy uncompressed r took AVG: 9.96 ms took median: 9.96 ms size:  k bytes
+Test: compressed w took AVG: 54.53 ms took median: 54.53 ms size: 336.725 k bytes
+Test: compressed r took AVG: 13.93 ms took median: 13.93 ms size:  k bytes
+Test: lossy compressed w took AVG: 53.80 ms took median: 53.80 ms size: 85.691 k bytes
+Test: lossy compressed r took AVG: 13.15 ms took median: 13.15 ms size:  k bytes
+Test: uncompressed sf w took AVG: 8.43 ms took median: 8.43 ms size: 326.68 k bytes
+Test: uncompressed sf r took AVG: 6.80 ms took median: 6.80 ms size:  k bytes
+Test: lossy uncompressed sf w took AVG: 11.78 ms took median: 11.78 ms size: 327.582 k bytes
+Test: uncompressed sf r took AVG: 6.73 ms took median: 6.73 ms size:  k bytes
+Test: compressed sf w took AVG: 41.93 ms took median: 41.93 ms size: 264.679 k bytes
+Test: compressed sf r took AVG: 8.92 ms took median: 8.92 ms size:  k bytes
+Test: lossy compressed sf w took AVG: 57.43 ms took median: 57.43 ms size: 125.59 k bytes
+Test: lossy compressed sf r took AVG: 8.65 ms took median: 8.65 ms size:  k bytes
+===============hdf===============
+Test: uncompressed w took AVG: 20.22 ms took median: 20.22 ms size: 678.496 k bytes
+Test: uncompressed r took AVG: 8.25 ms took median: 8.25 ms size:  k bytes
+Test: lossy uncompressed w took AVG: 31.62 ms took median: 31.62 ms size: 129.979 k bytes
+Test: lossy uncompressed r took AVG: 10.75 ms took median: 10.75 ms size:  k bytes
+Test: gzip compressed w took AVG: 40.72 ms took median: 40.72 ms size: 333.928 k bytes
+Test: gzip compressed r took AVG: 11.37 ms took median: 11.37 ms size:  k bytes
+Test: gzip lossy compressed w took AVG: 40.46 ms took median: 40.46 ms size: 116.283 k bytes
+Test: gzip lossy compressed r took AVG: 11.78 ms took median: 11.78 ms size:  k bytes
+Test: lzf compressed w took AVG: 44.25 ms took median: 44.25 ms size: 398.153 k bytes
+Test: lzf compressed r took AVG: 10.87 ms took median: 10.87 ms size:  k bytes
+Test: lzf lossy compressed w took AVG: 38.78 ms took median: 38.78 ms size: 119.444 k bytes
+Test: lzf lossy compressed r took AVG: 11.15 ms took median: 11.15 ms size:  k bytes
+Test: uncompressed sf w took AVG: 6.99 ms took median: 6.99 ms size: 324.48 k bytes
+Test: uncompressed sf w took AVG: 3.60 ms took median: 3.60 ms size:  k bytes
+Test: gzip compressed sf w took AVG: 22.36 ms took median: 22.36 ms size: 271.984 k bytes
+Test: gzip compressed sf w took AVG: 6.95 ms took median: 6.95 ms size:  k bytes
+Test: gzip lossy compressed sf w took AVG: 15.81 ms took median: 15.81 ms size: 113.2 k bytes
+Test: gzip lossy compressed sf w took AVG: 7.06 ms took median: 7.06 ms size:  k bytes
+Test: lzf compressed sf w took AVG: 17.83 ms took median: 17.83 ms size: 288.79 k bytes
+Test: lzf compressed sf w took AVG: 4.28 ms took median: 4.28 ms size:  k bytes
+Test: lzf lossy compressed sf w took AVG: 16.44 ms took median: 16.44 ms size: 112.88 k bytes
+Test: lzf lossy compressed sf w took AVG: 5.75 ms took median: 5.75 ms size:  k bytes
+===============CDF===============
+Test: uncompressed w took AVG: 16.18 ms took median: 16.18 ms size: 678.322 k bytes
+Test: uncompressed r took AVG: 7.33 ms took median: 7.33 ms size:  k bytes
+Test: compressed w took AVG: 71.09 ms took median: 71.09 ms size: 199.501 k bytes
+Test: compressed r took AVG: 14.48 ms took median: 14.48 ms size:  k bytes
+Test: uncompressed sf w took AVG: 4.14 ms took median: 4.14 ms size: 322.84 k bytes
+Test: uncompressed sf r took AVG: 22.55 ms took median: 22.55 ms size:  k bytes
+Test: compressed sf w took AVG: 33.66 ms took median: 33.66 ms size: 166.757 k bytes
+Test: compressed sf r took AVG: 9.88 ms took median: 9.88 ms size:  k bytes

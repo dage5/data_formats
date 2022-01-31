@@ -14,7 +14,7 @@ GLOBAL_ZIP_NAME = "ascii.zip"
 (gData, aData) = cn.loadData()
 sz = gData["arr_len"]
 
-SMALL_FILE_SIZE = 65160
+SMALL_FILE_SIZE = int(sys.argv[2])
 (globalData, arrayData) = cn.generateSFvalues(SMALL_FILE_SIZE)
 
 def writeUncompressed():

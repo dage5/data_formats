@@ -12,7 +12,7 @@ def rmAny(path):
 		else:
 			os.remove(path)
 	else:
-		print("Exiting! File " + path + " does not exist!")
+		print("File " + path + " does not exist!")
 #		sys.exit("Exiting! File " + path + " does not exist!")
 
 def get_size(start_path = '.'):

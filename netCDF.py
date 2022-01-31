@@ -20,7 +20,7 @@ GLOBAL_ZIP_NAME_SMALL = "nc_small.zip"
 (gData, aData) = cn.loadData()
 sz = gData["arr_len"]
 
-SMALL_FILE_SIZE = 65160
+SMALL_FILE_SIZE = int(sys.argv[2])
 (globalData_, arrayData_) = cn.generateSFvalues(SMALL_FILE_SIZE)
 
 def writeSmall(compression = False, lsf=None):
