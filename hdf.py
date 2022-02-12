@@ -117,6 +117,9 @@ cn.test(lambda: read(), "lzf lossy compressed r", iters)
 cn.test(lambda: writeSmall(), "uncompressed sf w", iters, GLOBAL_FN_SMALL)
 cn.test(lambda: readSmall(), "uncompressed sf w", iters)
 
+cn.test(lambda: writeSmall(None, False, 2), "lossy uncompressed sf w", iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "lossy uncompressed sf w", iters)
+
 cn.test(lambda: writeSmall("gzip", True, None), "gzip compressed sf w", iters, GLOBAL_FN_SMALL)
 cn.test(lambda: readSmall(), "gzip compressed sf w", iters)
 
