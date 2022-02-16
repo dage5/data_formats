@@ -35,7 +35,7 @@ def getS(filename):
 def extraCompression(inputFN, zipFN):
 	rmAny(zipFN)
 	start = tm.time()
-	p = subprocess.run(["zip", "-o", "-q", zipFN, inputFN, "-9"])
+	p = subprocess.run(["zip", "-o", "-q", "-r", zipFN, inputFN, "-9"])
 	end = tm.time()
 	return end - start
 
@@ -150,11 +150,18 @@ def generateSFvalues(size):
 	globalData = {"len": size}
 	arrayData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
 	for i in range(0, size):
-		randI = float(random.randint(-100,15)) * 0.1215
-		arrayData["intens"].append(float(i) * randI)
-		arrayData["lcr"].append(float(i) + randI)
-		arrayData["ucr"].append(float(i) - randI)
-		arrayData["ecr"].append(float(i)*randI + randI)
+		#urobit bezne rozsahy cisel
+		randI = float(random.randint(0,20)) + float(random.randint(0,1000))/1000
+		highComponent = randI * 2
+		middleComponent = randI + randI/2
+		if randI > 10:
+			highComponent = randI
+			middleComponent = highComponent
+		intens = randI + float(random.randint(500,12000))
+		arrayData["intens"].append(intens)
+		arrayData["lcr"].append(randI)
+		arrayData["ucr"].append(middleComponent)
+		arrayData["ecr"].append(highComponent)
 	return (globalData, arrayData)
 
 if __name__ == "__main__":

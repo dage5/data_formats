@@ -11,6 +11,9 @@ iters = int(sys.argv[1])
 GLOBAL_FN = "test.ascii"
 GLOBAL_ZIP_NAME = "ascii.zip"
 
+GLOBAL_SF_FN = "./inFiles/"
+GLOBAL_SF_ZIP_NAME = "ascii_sf.zip"
+
 (gData, aData) = cn.loadData()
 sz = gData["arr_len"]
 
@@ -37,9 +40,9 @@ def writeSmallFiles(globalData, arrayData, dirName = "./inFiles/"):
 	size = globalData["len"]
 	for i in range(0, size):
 		with open(dirName + "rigidity_"+str(i)+".dat", "w") as f:
-			f.write("{:f} {:.4f} {:.3f}".format(arrayData["lcr"][i], arrayData["ucr"][i], arrayData["ecr"][i]))
+			f.write("{:.2f} {:.2f} {:.2f}".format(arrayData["lcr"][i], arrayData["ucr"][i], arrayData["ecr"][i]))
 		with open(dirName + "intensity_"+str(i)+".dat", "w") as f:
-			f.write("{:.5f}".format(arrayData["intens"][i]))
+			f.write("{:.6f}".format(arrayData["intens"][i]))
 	end = tm.time()
 	return end - start
 
@@ -59,14 +62,18 @@ def readSmallFiles(size, dirName = "./inFiles/"):
 	end = tm.time()
 	return end - start
 
-cn.test(writeUncompressed, "uncompressed w", iters, GLOBAL_FN)
+cn.test(lambda: writeUncompressed(), "uncompressed w", iters, GLOBAL_FN)
 cn.test(lambda: read(), "uncompressed r", iters)
 
-#cn.test(lambda: (writeUncompressed() + cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed w", GLOBAL_ZIP_NAME)
-#cn.test(lambda: (read() + cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed r")
+cn.test(lambda: (writeUncompressed() + cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed w", iters, GLOBAL_ZIP_NAME)
+cn.test(lambda: (cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME) + read()), "zip compressed r", iters)
 
 cn.test(lambda: writeSmallFiles(globalData, arrayData), "uncompressed sf w", iters, "./inFiles/")
 cn.test(lambda: readSmallFiles(SMALL_FILE_SIZE), "uncompressed sf r", iters)
+
+cn.test(lambda: (writeSmallFiles(globalData, arrayData) + cn.extraCompression(GLOBAL_SF_FN, GLOBAL_SF_ZIP_NAME)), "zip compressed sf w", iters, GLOBAL_SF_ZIP_NAME)
+
+cn.test(lambda: (cn.extraCompressedRead(GLOBAL_SF_FN, GLOBAL_SF_ZIP_NAME) + readSmallFiles(SMALL_FILE_SIZE)), "zip compressed sf r", iters)
 
 
 
