@@ -2,7 +2,6 @@ import cdflib
 import numpy as np
 import os, sys
 import time as tm
-from hurry.filesize import size, si
 import subprocess
 import common as cn
 #https://github.com/MAVENSDC/cdflib
@@ -48,7 +47,7 @@ def readSmall():
 	start = tm.time()
 	cdf_file = cdflib.cdfread.CDF(GLOBAL_FN_SMALL)
 	attrs = cdf_file.globalattsget()
-	globData = {"len": size}
+	globData = {"len": sz}
 	arrData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
 	for arrayData_ in arrData:
 		arrData[arrayData_] = cdf_file.varget(arrayData_)

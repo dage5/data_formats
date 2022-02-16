@@ -2,7 +2,6 @@ from netCDF4 import Dataset
 import numpy as np
 import os, sys
 import time as tm
-from hurry.filesize import size, si
 import subprocess
 import common as cn
 #https://pyhogs.github.io/intro_netcdf4.html
@@ -48,7 +47,7 @@ def readSmall():
 	start = tm.time()
 	rootgrp = Dataset(GLOBAL_FN_SMALL, "r")
 	tempgrp = rootgrp.groups['OutputFile']
-	globData = {"len": size}
+	globData = {"len": sz}
 	arrData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
 	for arrayData in arrData:
 		arrData[arrayData] = tempgrp.variables[arrayData][:]

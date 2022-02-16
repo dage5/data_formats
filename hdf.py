@@ -2,7 +2,6 @@ import h5py
 import numpy as np
 import os, sys
 import time as tm
-from hurry.filesize import size, si
 import subprocess
 import common as cn
 #https://www.christopherlovell.co.uk/blog/2016/04/27/h5py-intro.html
@@ -45,7 +44,7 @@ def readSmall():
 	start = tm.time()
 	f = h5py.File(GLOBAL_FN_SMALL, "r")
 	oFile = f.get('OutputFile')
-	globData = {"len": size}
+	globData = {"len": sz}
 	arrData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
 	for data in arrData:
 		arrData[data] = oFile.get(data)[:]

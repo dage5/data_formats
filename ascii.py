@@ -1,7 +1,7 @@
 import numpy as np
 import os, sys
 import time as tm
-from hurry.filesize import size, si
+#from hurry.filesize import size, si
 import subprocess
 import common as cn
 #https://github.com/MAVENSDC/cdflib

@@ -4,7 +4,7 @@ smallFiles=60000
 
 sudo mkdir /mnt/tmp
 
-sudo mount -t tmpfs -o size=1000M tmpfs /mnt/tmp
+sudo mount -t tmpfs -o size=1500M tmpfs /mnt/tmp
 
 cp ./netCDF.py /mnt/tmp/netCDF.py
 cp ./hdf.py /mnt/tmp/hdf.py
