@@ -56,15 +56,16 @@ def formatter(seconds):
 		out = "{:.2f}".format(ms) + " ms"
 	return out
 
-def test(func, testName, iters = 10, filename = None):
+def test(func, testName, password, iters = 10, filename = None):
 	time = 0
 	times = []
 	for i in range(0, iters):
 		#neskor urobit aj ramdisk meranie (mozno docker)
 		#pridat vela malych suborov pre binarne formaty ale zle vyriesenych - kazdy subor bude mat samostatny skalar
-		os.system('sudo sh -c "sync; echo 1 > /proc/sys/vm/drop_caches"')
-		os.system('sudo sh -c "sync; echo 2 > /proc/sys/vm/drop_caches"')
-		os.system('sudo sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"')
+		
+		os.system('echo "'+password+'" | sudo -S sh -c "sync; echo 1 > /proc/sys/vm/drop_caches"')
+		os.system('echo "'+password+'" | sudo -S sh -c "sync; echo 2 > /proc/sys/vm/drop_caches"')
+		os.system('echo "'+password+'" | sudo -S sh -c "sync; echo 3 > /proc/sys/vm/drop_caches"')
 		ret = func()
 		time = time + ret
 		times.append(ret)
@@ -163,6 +164,17 @@ def generateSFvalues(size):
 		arrayData["ucr"].append(middleComponent)
 		arrayData["ecr"].append(highComponent)
 	return (globalData, arrayData)
+
+def compare(name, orig, derived, formatStr):
+	unequal = 0
+	diff = 0
+	for index in range(0, len(orig)):
+		if formatStr.format(orig[index]) != formatStr.format(derived[index]):
+			#if(name == "intens"):
+			#	print(formatStr.format(orig[index]), formatStr.format(derived[index]))
+			unequal += 1
+			diff += abs(orig[index] - derived[index])
+	return str(unequal) + " " + str(diff) + " " + str(diff/len(orig))
 
 if __name__ == "__main__":
 	#gData, aData = loadData()

@@ -6,6 +6,7 @@
 inFiles/
 
 # Byte-compiled / optimized / DLL files
+result_analysis/__pycache__/
 __pycache__/
 *.py[cod]
 *$py.class

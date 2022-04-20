@@ -18,6 +18,7 @@ GLOBAL_SF_ZIP_NAME = "ascii_sf.zip"
 sz = gData["arr_len"]
 
 SMALL_FILE_SIZE = int(sys.argv[2])
+SUDO_PASSWD = str(sys.argv[3])
 (globalData, arrayData) = cn.generateSFvalues(SMALL_FILE_SIZE)
 
 def writeUncompressed():
@@ -62,18 +63,18 @@ def readSmallFiles(size, dirName = "./inFiles/"):
 	end = tm.time()
 	return end - start
 
-cn.test(lambda: writeUncompressed(), "uncompressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "uncompressed r", iters)
+cn.test(lambda: writeUncompressed(), "uncompressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "uncompressed r", SUDO_PASSWD, iters)
 
-cn.test(lambda: (writeUncompressed() + cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed w", iters, GLOBAL_ZIP_NAME)
-cn.test(lambda: (cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME) + read()), "zip compressed r", iters)
+cn.test(lambda: (writeUncompressed() + cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME)), "zip compressed w", SUDO_PASSWD, iters, GLOBAL_ZIP_NAME)
+cn.test(lambda: (cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME) + read()), "zip compressed r", SUDO_PASSWD, iters)
 
-cn.test(lambda: writeSmallFiles(globalData, arrayData), "uncompressed sf w", iters, "./inFiles/")
-cn.test(lambda: readSmallFiles(SMALL_FILE_SIZE), "uncompressed sf r", iters)
+cn.test(lambda: writeSmallFiles(globalData, arrayData), "uncompressed sf w", SUDO_PASSWD, iters, "./inFiles/")
+cn.test(lambda: readSmallFiles(SMALL_FILE_SIZE), "uncompressed sf r", SUDO_PASSWD, iters)
 
-cn.test(lambda: (writeSmallFiles(globalData, arrayData) + cn.extraCompression(GLOBAL_SF_FN, GLOBAL_SF_ZIP_NAME)), "zip compressed sf w", iters, GLOBAL_SF_ZIP_NAME)
+cn.test(lambda: (writeSmallFiles(globalData, arrayData) + cn.extraCompression(GLOBAL_SF_FN, GLOBAL_SF_ZIP_NAME)), "zip compressed sf w", SUDO_PASSWD, iters, GLOBAL_SF_ZIP_NAME)
 
-cn.test(lambda: (cn.extraCompressedRead(GLOBAL_SF_FN, GLOBAL_SF_ZIP_NAME) + readSmallFiles(SMALL_FILE_SIZE)), "zip compressed sf r", iters)
+cn.test(lambda: (cn.extraCompressedRead(GLOBAL_SF_FN, GLOBAL_SF_ZIP_NAME) + readSmallFiles(SMALL_FILE_SIZE)), "zip compressed sf r", SUDO_PASSWD, iters)
 
 
 

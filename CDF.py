@@ -17,7 +17,10 @@ GLOBAL_ZIP_NAME_SMALL = "cdf_small.zip"
 sz = gData["arr_len"]
 
 SMALL_FILE_SIZE = int(sys.argv[2])
+SUDO_PASSWD = str(sys.argv[3])
 (globalData, arrayData) = cn.generateSFvalues(SMALL_FILE_SIZE)
+
+F_TYPE = cdflib.cdfwrite.CDF.CDF_REAL8
 
 settings = dict()
 
@@ -31,7 +34,7 @@ def writeSmall(compressionLvl):
 		globalAttrs[attrData] = {0: globalData[attrData]}
 	cdf_file.write_globalattrs(globalAttrs)
 	varinfo = {}
-	varinfo["Data_Type"] = cdflib.cdfwrite.CDF.CDF_REAL8 #'CDF_FLOAT'
+	varinfo["Data_Type"] = F_TYPE #'CDF_FLOAT'
 	varinfo["Num_Elements"] = 1
 	varinfo["Rec_Vary"] = 0
 	varinfo["Dim_Sizes"] = [SMALL_FILE_SIZE]
@@ -58,6 +61,17 @@ def readSmall():
 	#print(globData["len"], arrData["intens"])
 	return end - start
 
+def compareSmall():
+	cdf_file = cdflib.cdfread.CDF(GLOBAL_FN_SMALL)
+	attrs = cdf_file.globalattsget()
+	globData = {"len": sz}
+	arrData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
+	formatStr = {"intens":'{:.6f}',"lcr":'{:.2f}',"ucr":'{:.2f}',"ecr":'{:.2f}'}
+	for arrayData_ in arrData:
+		arrData[arrayData_] = cdf_file.varget(arrayData_)
+		print(arrayData_, cn.compare(arrayData_, arrData[arrayData_], arrayData[arrayData_], formatStr[arrayData_]))
+	cdf_file.close()
+
 def write(compressionLvl):
 	cn.rmAny(GLOBAL_FN)
 	start = tm.time()
@@ -68,7 +82,7 @@ def write(compressionLvl):
 		globalAttrs[attrData] = {0: gData[attrData]}
 	cdf_file.write_globalattrs(globalAttrs)
 	varinfo = {}
-	varinfo["Data_Type"] = cdflib.cdfwrite.CDF.CDF_REAL8 #'CDF_FLOAT'
+	varinfo["Data_Type"] = F_TYPE #'CDF_FLOAT'
 	varinfo["Num_Elements"] = 1
 	varinfo["Rec_Vary"] = 0
 	varinfo["Dim_Sizes"] = [sz]
@@ -94,23 +108,24 @@ def read():
 	end = tm.time()
 	return end - start
 
-cn.test(lambda: write(0), "uncompressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "uncompressed r", iters)
+cn.test(lambda: write(0), "uncompressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "uncompressed r", SUDO_PASSWD, iters)
 
 #cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", iters, GLOBAL_ZIP_NAME)
 #cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r", iters)
 
-cn.test(lambda: write(9), "compressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "compressed r", iters)
+cn.test(lambda: write(9), "compressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "compressed r", SUDO_PASSWD, iters)
 
 #cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", iters, GLOBAL_ZIP_NAME)
 #cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r", iters)
 
-cn.test(lambda: writeSmall(0), "uncompressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "uncompressed sf r", iters)
+cn.test(lambda: writeSmall(0), "uncompressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "uncompressed sf r", SUDO_PASSWD, iters)
 
-cn.test(lambda: writeSmall(9), "compressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "compressed sf r", iters)
+cn.test(lambda: writeSmall(9), "compressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "compressed sf r", SUDO_PASSWD, iters)
+compareSmall()
 
 
 

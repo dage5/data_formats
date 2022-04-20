@@ -20,6 +20,7 @@ GLOBAL_ZIP_NAME_SMALL = "hdf_small.zip"
 sz = gData["arr_len"]
 
 SMALL_FILE_SIZE = int(sys.argv[2])
+SUDO_PASSWD = str(sys.argv[3])
 (globalData, arrayData) = cn.generateSFvalues(SMALL_FILE_SIZE)
 
 def writeSmall(cfName = "gzip", compression = False, scaleoffset = None):
@@ -54,6 +55,17 @@ def readSmall():
 	end = tm.time()
 	return end - start
 
+def compareSmall():
+	f = h5py.File(GLOBAL_FN_SMALL, "r")
+	oFile = f.get('OutputFile')
+	globData = {"len": sz}
+	arrData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
+	formatStr = {"intens":'{:.6f}',"lcr":'{:.2f}',"ucr":'{:.2f}',"ecr":'{:.2f}'}
+	for data in arrData:
+		arrData[data] = oFile.get(data)[:]
+		print(data, cn.compare(data, arrData[data], arrayData[data], formatStr[data]))
+	f.close()
+
 def write(cfName = "gzip", compression = False, scaleoffset = None):
 	cn.rmAny(GLOBAL_FN)
 	start = tm.time()
@@ -86,51 +98,52 @@ def read():
 	end = tm.time()
 	return end - start
 
-cn.test(lambda: write(), "uncompressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "uncompressed r", iters)
+cn.test(lambda: write(), "uncompressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "uncompressed r", SUDO_PASSWD, iters)
 
-cn.test(lambda: write(None, False, 2), "lossy uncompressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "lossy uncompressed r", iters)
-
-#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", iters, GLOBAL_ZIP_NAME)
-#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r", iters)
-
-cn.test(lambda: write("gzip", True, None), "gzip compressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "gzip compressed r", iters)
+cn.test(lambda: write(None, False, 2), "lossy uncompressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "lossy uncompressed r", SUDO_PASSWD, iters)
 
 #cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", iters, GLOBAL_ZIP_NAME)
 #cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r", iters)
 
-cn.test(lambda: write("gzip", True, 2), "gzip lossy compressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "gzip lossy compressed r", iters)
+cn.test(lambda: write("gzip", True, None), "gzip compressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "gzip compressed r", SUDO_PASSWD, iters)
 
-cn.test(lambda: write("lzf", True, None), "lzf compressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "lzf compressed r", iters)
+#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", iters, GLOBAL_ZIP_NAME)
+#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r", iters)
 
-cn.test(lambda: write("lzf", True, 2), "lzf lossy compressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "lzf lossy compressed r", iters)
+cn.test(lambda: write("gzip", True, 2), "gzip lossy compressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "gzip lossy compressed r", SUDO_PASSWD, iters)
+
+cn.test(lambda: write("lzf", True, None), "lzf compressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "lzf compressed r", SUDO_PASSWD, iters)
+
+cn.test(lambda: write("lzf", True, 2), "lzf lossy compressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "lzf lossy compressed r", SUDO_PASSWD, iters)
 
 #cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed w", iters, GLOBAL_ZIP_NAME)
 #cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed r", iters)
 
-cn.test(lambda: writeSmall(), "uncompressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "uncompressed sf w", iters)
+cn.test(lambda: writeSmall(), "uncompressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "uncompressed sf w", SUDO_PASSWD, iters)
 
-cn.test(lambda: writeSmall(None, False, 2), "lossy uncompressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "lossy uncompressed sf w", iters)
+cn.test(lambda: writeSmall(None, False, 2), "lossy uncompressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "lossy uncompressed sf w", SUDO_PASSWD, iters)
 
-cn.test(lambda: writeSmall("gzip", True, None), "gzip compressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "gzip compressed sf w", iters)
+cn.test(lambda: writeSmall("gzip", True, None), "gzip compressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "gzip compressed sf w", SUDO_PASSWD, iters)
 
-cn.test(lambda: writeSmall("gzip", True, 2), "gzip lossy compressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "gzip lossy compressed sf w", iters)
+cn.test(lambda: writeSmall("gzip", True, 2), "gzip lossy compressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "gzip lossy compressed sf w", SUDO_PASSWD, iters)
 
-cn.test(lambda: writeSmall("lzf", True, None), "lzf compressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "lzf compressed sf w", iters)
+cn.test(lambda: writeSmall("lzf", True, None), "lzf compressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "lzf compressed sf w", SUDO_PASSWD, iters)
+compareSmall()
 
-cn.test(lambda: writeSmall("lzf", True, 2), "lzf lossy compressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "lzf lossy compressed sf w", iters)
-
+cn.test(lambda: writeSmall("lzf", True, 2), "lzf lossy compressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "lzf lossy compressed sf w", SUDO_PASSWD, iters)
+compareSmall()
 
 
 

@@ -1,10 +1,16 @@
-iters=1000
-smallFiles=60000
+iters=1 #1000
+smallFiles=60 #60000
 #smallFiles=50
+passwd=developer
 
-sudo mkdir /mnt/tmp
+#echo -n "Enter sudo password "
+#read passwd
 
-sudo mount -t tmpfs -o size=1500M tmpfs /mnt/tmp
+# nohup bash run.sh > test_10_50 &
+
+echo $passwd | sudo -S mkdir /mnt/tmp
+
+echo $passwd | sudo -S mount -t tmpfs -o size=1500M tmpfs /mnt/tmp
 
 cp ./netCDF.py /mnt/tmp/netCDF.py
 cp ./hdf.py /mnt/tmp/hdf.py
@@ -17,34 +23,36 @@ echo "===============RAM==============="
 cd /mnt/tmp/
 
 echo "===============ascii==============="
-python3 /mnt/tmp/ascii.py $iters $smallFiles
+python3 /mnt/tmp/ascii.py $iters $smallFiles $passwd
 
 echo "===============netCDF==============="
-python3 /mnt/tmp/netCDF.py $iters $smallFiles
+python3 /mnt/tmp/netCDF.py $iters $smallFiles $passwd
 
 echo "===============hdf==============="
-python3 /mnt/tmp/hdf.py $iters $smallFiles
+python3 /mnt/tmp/hdf.py $iters $smallFiles $passwd
 
 echo "===============CDF==============="
-python3 /mnt/tmp/CDF.py $iters $smallFiles
+python3 /mnt/tmp/CDF.py $iters $smallFiles $passwd
+
+#exit 0
 
 cd /home/
 
-sudo umount -f /mnt/tmp
-sudo rm -r /mnt/tmp/
+echo $passwd | sudo -S umount -f /mnt/tmp
+echo $passwd | sudo -S rm -r /mnt/tmp/
 
 
 echo "===============HDD==============="
 cd /home/developer/Documents/data_formats/
 
 echo "===============ascii==============="
-python3 ascii.py $iters $smallFiles
+python3 ascii.py $iters $smallFiles $passwd
 
 echo "===============netCDF==============="
-python3 netCDF.py $iters $smallFiles
+python3 netCDF.py $iters $smallFiles $passwd
 
 echo "===============hdf==============="
-python3 hdf.py $iters $smallFiles
+python3 hdf.py $iters $smallFiles $passwd
 
 echo "===============CDF==============="
-python3 CDF.py $iters $smallFiles
+python3 CDF.py $iters $smallFiles $passwd

@@ -20,6 +20,7 @@ GLOBAL_ZIP_NAME_SMALL = "nc_small.zip"
 sz = gData["arr_len"]
 
 SMALL_FILE_SIZE = int(sys.argv[2])
+SUDO_PASSWD = str(sys.argv[3])
 (globalData_, arrayData_) = cn.generateSFvalues(SMALL_FILE_SIZE)
 
 def writeSmall(compression = False, lsf=None):
@@ -58,6 +59,17 @@ def readSmall():
 	#print(arrData["rig"])
 	return end - start
 
+def compareSmall():
+	rootgrp = Dataset(GLOBAL_FN_SMALL, "r")
+	tempgrp = rootgrp.groups['OutputFile']
+	globData = {"len": sz}
+	arrData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
+	formatStr = {"intens":'{:.6f}',"lcr":'{:.2f}',"ucr":'{:.2f}',"ecr":'{:.2f}'}
+	for arrayData in arrData:
+		arrData[arrayData] = tempgrp.variables[arrayData][:]
+		print(arrayData, cn.compare(arrayData, arrData[arrayData], arrayData_[arrayData], formatStr[arrayData]))
+	rootgrp.close()
+
 def write(compression = False, lsf=None):
 	cn.rmAny(GLOBAL_FN)
 	start = tm.time()
@@ -95,38 +107,40 @@ def read():
 	return end - start
 
 
-cn.test(lambda: write(), "uncompressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "uncompressed r", iters)
+cn.test(lambda: write(), "uncompressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "uncompressed r", SUDO_PASSWD, iters)
 
-cn.test(lambda: write(False, 2), "lossy uncompressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "lossy uncompressed r", iters)
-
-#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
-#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
-
-cn.test(lambda: write(True, None), "compressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "compressed r", iters)
+cn.test(lambda: write(False, 2), "lossy uncompressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "lossy uncompressed r", SUDO_PASSWD, iters)
 
 #cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
 #cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
 
-cn.test(lambda: write(True, 2), "lossy compressed w", iters, GLOBAL_FN)
-cn.test(lambda: read(), "lossy compressed r", iters)
+cn.test(lambda: write(True, None), "compressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "compressed r", SUDO_PASSWD, iters)
+
+#cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed w", GLOBAL_ZIP_NAME)
+#cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip compressed r")
+
+cn.test(lambda: write(True, 2), "lossy compressed w", SUDO_PASSWD, iters, GLOBAL_FN)
+cn.test(lambda: read(), "lossy compressed r", SUDO_PASSWD, iters)
 
 #cn.test(lambda: cn.extraCompression(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed w", GLOBAL_ZIP_NAME)
 #cn.test(lambda: cn.extraCompressedRead(GLOBAL_FN, GLOBAL_ZIP_NAME), "zip lossy compressed r")
 
-cn.test(lambda: writeSmall(), "uncompressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "uncompressed sf r", iters)
+cn.test(lambda: writeSmall(), "uncompressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "uncompressed sf r", SUDO_PASSWD, iters)
 
-cn.test(lambda: writeSmall(False, 2), "lossy uncompressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "uncompressed sf r", iters)
+cn.test(lambda: writeSmall(False, 2), "lossy uncompressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "uncompressed sf r", SUDO_PASSWD, iters)
 
-cn.test(lambda: writeSmall(True, None), "compressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "compressed sf r", iters)
+cn.test(lambda: writeSmall(True, None), "compressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "compressed sf r", SUDO_PASSWD, iters)
+compareSmall()
 
-cn.test(lambda: writeSmall(True, 2), "lossy compressed sf w", iters, GLOBAL_FN_SMALL)
-cn.test(lambda: readSmall(), "lossy compressed sf r", iters)
+cn.test(lambda: writeSmall(True, 2), "lossy compressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
+cn.test(lambda: readSmall(), "lossy compressed sf r", SUDO_PASSWD, iters)
+compareSmall()
 
 
 
