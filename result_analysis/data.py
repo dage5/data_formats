@@ -1,5 +1,7 @@
 import numpy as np
 
+all_labels = ["text","netCDF","HDF5","CDF","text*","netCDF*","HDF5 gzip*","HDF5 lzf*","CDF*"]
+
 uncompressed_labels = ["text","netCDF","HDF5","CDF"]
 uncompressed_lossy_labels = ["netCDF","HDF5"]
 compressed_labels = ["text","netCDF","HDF5 gzip","HDF5 lzf","CDF"]

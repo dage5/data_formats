@@ -10,7 +10,7 @@ passwd=developer
 
 echo $passwd | sudo -S mkdir /mnt/tmp
 
-echo $passwd | sudo -S mount -t tmpfs -o size=1500M tmpfs /mnt/tmp
+echo $passwd | sudo -S mount -t tmpfs -o size=2000M tmpfs /mnt/tmp
 
 cp ./netCDF.py /mnt/tmp/netCDF.py
 cp ./hdf.py /mnt/tmp/hdf.py
