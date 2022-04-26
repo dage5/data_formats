@@ -40,7 +40,7 @@ def plot_(labels, data, markers, colors, label_names, filename, ylabel, title, l
 
 #markers = ["s", "+", "x", "D", "1", "8", "p", "*"]
 
-label_names = ["read normal", "write normal", "read small", "write small", "lossy read normal", "lossy write normal", "lossy read small", "lossy write small"]
+label_names = ["write normal", "read normal", "write small", "read small", "lossy write normal", "lossy read normal", "lossy write small", "lossy read small"]
 ################################xx
 ##########
 """data = [
@@ -132,7 +132,19 @@ data = np.array([
     np.concatenate(((100*((-d.normal_uncompressed_sz[0]+d.normal_uncompressed_sz[0][0])/d.normal_uncompressed_sz[0][0]))/(d.normal_uncompressed_ram[1]),(100*((-d.normal_compressed_sz[0]+d.normal_uncompressed_sz[0][0])/d.normal_uncompressed_sz[0][0]))/d.normal_compressed_ram[1])),
     np.concatenate(((100*((-d.small_uncompressed_sz[0]+d.small_uncompressed_sz[0][0])/d.small_uncompressed_sz[0][0]))/(d.small_uncompressed_ram[0]),(100*((-d.small_compressed_sz[0]+d.small_uncompressed_sz[0][0])/d.small_uncompressed_sz[0][0]))/d.small_compressed_ram[0])),
     np.concatenate(((100*((-d.small_uncompressed_sz[0]+d.small_uncompressed_sz[0][0])/d.small_uncompressed_sz[0][0]))/(d.small_uncompressed_ram[1]),(100*((-d.small_compressed_sz[0]+d.small_uncompressed_sz[0][0])/d.small_uncompressed_sz[0][0]))/d.small_compressed_ram[1])),
+])
+#data = 1 / data
+for i in range(0, len(data)):
+    data[i][np.isinf(np.abs(data[i]))] = 0
+    data[i][np.isnan(np.abs(data[i]))] = np.nan
+    data[i][data[i] < 0] = np.nan
 
+colors = ['green','blue','red','black']#['green','blue']#
+markers = ["+", "x"]#["+", "+", "x", "x"]#
+
+plot_(d.all_labels, data, markers, colors, label_names, '9_1_rps.png', "[%/s]", "Size reduction per second with compression - lossless", False, [12,4], "")
+
+data = np.array([
     np.concatenate(((100*((-d.normal_uncompressed_sz[1]+d.normal_uncompressed_sz[0][0])/d.normal_uncompressed_sz[0][0]))/d.normal_uncompressed_ram[2],(100*((-d.normal_compressed_sz[1]+d.normal_uncompressed_sz[0][0])/d.normal_uncompressed_sz[0][0]))/d.normal_compressed_ram[2])),
     np.concatenate(((100*((-d.normal_uncompressed_sz[1]+d.normal_uncompressed_sz[0][0])/d.normal_uncompressed_sz[0][0]))/d.normal_uncompressed_ram[3],(100*((-d.normal_compressed_sz[1]+d.normal_uncompressed_sz[0][0])/d.normal_uncompressed_sz[0][0]))/d.normal_compressed_ram[3])),
     np.concatenate(((100*((-d.small_uncompressed_sz[1]+d.small_uncompressed_sz[0][0])/d.small_uncompressed_sz[0][0]))/d.small_uncompressed_ram[2],(100*((-d.small_compressed_sz[1]+d.small_uncompressed_sz[0][0])/d.small_uncompressed_sz[0][0]))/d.small_compressed_ram[2])),
@@ -145,10 +157,10 @@ for i in range(0, len(data)):
     data[i][np.isnan(np.abs(data[i]))] = np.nan
     data[i][data[i] < 0] = np.nan
 
-colors = ['green','blue','red','black', 'purple','brown','orange','yellowgreen']#['green','blue']#
-markers = ["+", "x", "+", "x"]#["+", "+", "x", "x"]#
+colors = ['green','blue','red','black']#['green','blue']#
+markers = ["+", "x"]#["+", "+", "x", "x"]#
 
-plot_(d.all_labels, data, markers, colors, label_names, '9_9_rps.png', "[%/s]", "Size reduction per second with compression", False, [12,4], "")
+plot_(d.all_labels, data, markers, colors, label_names, '9_2_rps.png', "[%/s]", "Size reduction per second with compression - lossless", False, [12,4], "")
 
 """data = [
     d.normal_uncompressed_ssd[0]/d.normal_uncompressed_ram[0],

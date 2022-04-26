@@ -125,7 +125,7 @@ cn.test(lambda: readSmall(), "uncompressed sf r", SUDO_PASSWD, iters)
 
 cn.test(lambda: writeSmall(9), "compressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
 cn.test(lambda: readSmall(), "compressed sf r", SUDO_PASSWD, iters)
-compareSmall()
+#compareSmall()
 
 
 

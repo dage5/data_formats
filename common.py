@@ -152,7 +152,7 @@ def generateSFvalues(size):
 	arrayData = {"intens":[],"lcr":[],"ucr":[],"ecr":[]}
 	for i in range(0, size):
 		#urobit bezne rozsahy cisel
-		randI = float(random.randint(0,20)) + float(random.randint(0,1000))/1000
+		randI = float(random.randint(0, 20)) + float(random.randint(0, 1000)) / 1000
 		highComponent = randI * 2
 		middleComponent = randI + randI/2
 		if randI > 10:

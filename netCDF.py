@@ -136,11 +136,11 @@ cn.test(lambda: readSmall(), "uncompressed sf r", SUDO_PASSWD, iters)
 
 cn.test(lambda: writeSmall(True, None), "compressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
 cn.test(lambda: readSmall(), "compressed sf r", SUDO_PASSWD, iters)
-compareSmall()
+#compareSmall()
 
 cn.test(lambda: writeSmall(True, 2), "lossy compressed sf w", SUDO_PASSWD, iters, GLOBAL_FN_SMALL)
 cn.test(lambda: readSmall(), "lossy compressed sf r", SUDO_PASSWD, iters)
-compareSmall()
+#compareSmall()
 
 
 
